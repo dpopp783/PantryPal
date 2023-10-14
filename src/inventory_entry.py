@@ -27,6 +27,7 @@ class InventoryEntry:
         self._ingredient = ingredient
         self._quantity = quantity
         self._unit = unit
+        # TODO design issue: if multiple units of an ingredient have different expiration dates, how do we represent that?
         self._expiration_date = expiration_date
 
     @property
