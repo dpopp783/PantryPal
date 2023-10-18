@@ -1,0 +1,33 @@
+body {
+    margin: 0px;
+}
+
+.menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    background-color: #404040;
+    width: 20%;
+    min-width: fit-content;
+    height: 100%;
+    margin: 0%;
+
+    font-family: sans-serif;
+    color: white;
+    font-weight: 700;
+}
+
+.menu-logo {
+    position: relative;
+    padding: 10 20 10 10;
+
+    font-size: 50;
+}
+
+.menu-option {
+    position: relative;
+    padding: 10 20 10 10;
+
+    font-size: 20;
+}
