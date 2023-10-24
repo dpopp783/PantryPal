@@ -5,6 +5,10 @@
 </head>
 
 <body>
+    <div class="top-bar">
+
+    </div>
+
     <div class="menu">
         <div class="menu-logo">
             Pantry <br>
@@ -23,9 +27,24 @@
             </div>
             <div class="menu-option">Settings</div>
         </div>
+    </div>  
 
-        
-    </div>    
+    <div class="table-container">
+        <table class="ingredients">
+            <tr>
+                <th>Ingredient</th>
+                <th>Quantity</th>
+                <th>Expiration Date</th>
+            </tr>
+            {% for item in data %}
+            <tr>
+                <td> {{item.ingredient.name}} </td>
+                <td> {{item.quantity}} {{item.unit}} </td>
+                <td> {{item.expiration_date}} </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 
 </html>
