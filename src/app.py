@@ -13,7 +13,7 @@ def login():
 def dashboard():
     return render_template("dashboard.html")
 
-@app.route("/ingredients")
+@app.route("/ingredients", methods=["GET", "POST"])
 def ingredients():
     test = InventoryTracker()
 
@@ -23,7 +23,11 @@ def ingredients():
 
     test.inventory = [item1, item2, item3]
 
-    return render_template("ingredients.html", data = test.inventory)
+    if request.method == "POST":
+        print("REQUEST:")
+        print(request.form)
+
+    return render_template("ingredients.html", inventory = test.inventory)
 
 @app.route("/recipes")
 def recipes():

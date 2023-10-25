@@ -1,5 +1,5 @@
 import requests
-from config import api_key
+# from config import api_key
 
 
 class RecipeRecommender:
