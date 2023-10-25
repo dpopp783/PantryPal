@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body>
+    <div class="menu-bar">
+        <a class="menu-option" href="/ingredients">Ingredients</a>
+        <a class="menu-option" href="/recipes">Recipes</a>
+        <a class="menu-option" href="/shoppinglist">Shopping List</a>
+    </div>
+
+    <div class="view-label">My Pantry</div>
+
+    <div class="viewer">
+        
+        <div class="viewer-buttons">
+            <button id="modify">Modify</button>
+            <button id="submit">Submit</button>
+            <button id="cancel">Cancel</button>
+        </div>
+
+        <div class="header">
+            <div class="row">
+                <div class="col">Ingredient:</div>
+                <div class="col">Quantity:</div>
+                <div class="col">Expiration Date:</div>
+            </div>
+        </div>
+
+        <form id="inventory" class="inventory" method="post">
+            {% for item in inventory %}
+                <div class="row">
+                    <div class="col">
+                        {{item.ingredient.name}}
+                    </div>
+                    <div class="col">
+                        <input type="text" name="{{item.ingredient.id}} quantity" value="{{item.quantity}}"> {{item.unit}}
+                    </div>
+                    <div class="col">
+                        <input type="date" name="{{item.ingredient.id}} expiration_date" value="{{item.expiration_date}}">
+                    </div>     
+                </div>
+            {% endfor %}
+        </form>
+
+        <button id="add">Add Ingredient</button>
+
+    </div>
+</body>
+
+</html>
+
+</script src="js/script.js"></script>
+
+<script>
+    document.getElementById("modify").addEventListener("click", function(){
+        document.getElementById("submit").style.display = "flex";
+        document.getElementById("cancel").style.display = "flex";
+        document.getElementById("modify").style.display = "none";
+    });
+
+    document.getElementById("submit").addEventListener("click", function(){
+        document.getElementById("inventory").submit();
+        console.log("SUBMITTED!")
+        // TODO: Add confirmation pop-up.
+    });
+
+    document.getElementById("cancel").addEventListener("click", function(){
+        document.getElementById("submit").style.display = "none";
+        document.getElementById("cancel").style.display = "none";
+        document.getElementById("modify").style.display = "flex";
+        document.getElementById("inventory").reset();
+    })
+</script>
