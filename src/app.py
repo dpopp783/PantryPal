@@ -57,7 +57,7 @@ def dashboard():
     return render_template("dashboard.html")
 
 
-@app.route("/ingredients", methods=["GET", "POST"])
+@app.route("/ingredients")
 def ingredients():
     test = InventoryTracker()
 
@@ -72,10 +72,7 @@ def ingredients():
 
     test.inventory = inventory
 
-    if request.method == "POST":
-        print("REQUEST:")
-        print(request.form)
-
+    # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
     return render_template("ingredients.html", inventory=test.inventory)
 
 
@@ -86,4 +83,6 @@ def recipes():
 
 @app.route("/shoppinglist")
 def shoppinglist():
-    return render_template("shoppinglist.html")
+
+    test = [InventoryEntry(Ingredient("Rice", 1),16,"cup"), InventoryEntry(Ingredient("Flour", 2),24,"oz")]
+    return render_template("shoppinglist.html", shoppinglist=test, shoppinglist_JSON='{"1":{"ingredient":{"name":"Rice", "id":1}, "quantity":16, "unit":"cup"}, "2":{"ingredient":{"name":"Flour", "id":2}, "quantity":24, "unit":"oz"}}')
