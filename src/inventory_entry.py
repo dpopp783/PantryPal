@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 # from config import api_key
 import requests
+import json
 
 
 @dataclass
@@ -56,3 +57,10 @@ class InventoryEntry:
         self._quantity -= amount
 
         return self._quantity
+
+    def json(self):
+        return json.dumps({"ingredient_name": self._ingredient.name,
+                           "ingredient_id": self._ingredient.id,
+                           "quantity": self._quantity,
+                           "unit": self._unit,
+                           "expiration_date": str(self._expiration_date)})
