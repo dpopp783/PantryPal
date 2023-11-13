@@ -12,4 +12,4 @@ class InventoryTracker:
         return ",".join(map(lambda i: i.name, self.inventory))
 
     def json(self):
-        return json.dumps([ie.json() for ie in self.inventory])
+        return json.dumps({ie.ingredient.id: ie.json() for ie in self.inventory})

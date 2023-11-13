@@ -59,8 +59,7 @@ class InventoryEntry:
         return self._quantity
 
     def json(self):
-        return json.dumps({"ingredient_name": self._ingredient.name,
-                           "ingredient_id": self._ingredient.id,
+        return json.dumps({"ingredient": {"name": self._ingredient.name, "id": self._ingredient.id},
                            "quantity": self._quantity,
                            "unit": self._unit,
                            "expiration_date": str(self._expiration_date)})
