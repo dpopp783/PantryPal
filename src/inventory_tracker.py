@@ -11,5 +11,5 @@ class InventoryTracker:
     def __str__(self):
         return ",".join(map(lambda i: i.name, self.inventory))
 
-    def json(self):
-        return json.dumps({ie.ingredient.id: ie.json() for ie in self.inventory})
+    def jsonify(self):
+        return json.dumps({ie.ingredient.id: ie.jsonify() for ie in self.inventory})
