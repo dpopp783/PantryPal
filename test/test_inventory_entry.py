@@ -2,6 +2,7 @@ import sys
 import json
 import pytest 
 from datetime import date 
+from inventory_entry import InventoryEntry, convert, Ingredient
 
 
 def test_convert_valid_ingredient():
