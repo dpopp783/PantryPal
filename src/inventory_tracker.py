@@ -1,4 +1,4 @@
-from inventory_entry import InventoryEntry
+from inventory_entry import InventoryEntry, Ingredient
 from typing import List, Dict
 import json
 
@@ -19,4 +19,7 @@ class InventoryTracker:
             self.inventory[id].deduct(quantity, unit)
 
     def jsonify(self):
-        return json.dumps({str(ie.ingredient.id): ie.jsonify() for ie in self.inventory.values()})
+        return json.dumps({ie.ingredient.id: ie.to_dict() for ie in self.inventory.values()})
+    
+    def to_dict(self):
+        return {str(ie.ingredient.id): ie.to_dict() for ie in self.inventory.values()}

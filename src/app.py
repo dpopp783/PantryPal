@@ -70,10 +70,10 @@ def ingredients():
     #     ing_name = cur.fetchall()[0][0]
     #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
 
-    test.inventory = [InventoryEntry(Ingredient("Rice", 1), 1, "cup", "2023-11-01")]
-
+    test.inventory = {1: InventoryEntry(Ingredient("Rice", 1), 1, "cup", "2023-11-01")}
+    a = '{"1":{"ingredient":{"name":"Rice", "id":1}, "quantity":1, "unit":"cup", "expiration_date":"2023-11-01"}}'
     # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
-    return render_template("ingredients.html", inventory=test.inventory, inventory_JSON = '{"1":{"ingredient":{"name":"Rice", "id":1}, "quantity":1, "unit":"cup", "expiration_date":"2023-11-01"}}')
+    return render_template("ingredients.html", inventory=test.inventory, inventory_JSON = test.jsonify())
 
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():

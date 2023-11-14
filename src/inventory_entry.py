@@ -63,3 +63,9 @@ class InventoryEntry:
                            "quantity": self._quantity,
                            "unit": self._unit,
                            "expiration_date": str(self._expiration_date)})
+    
+    def to_dict(self):
+        return {"ingredient": {"name": self._ingredient.name, "id": self._ingredient.id},
+                           "quantity": self._quantity,
+                           "unit": self._unit,
+                           "expiration_date": str(self._expiration_date)}
