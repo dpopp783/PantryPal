@@ -96,3 +96,9 @@ def shoppinglist():
 
     test = [InventoryEntry(Ingredient("Rice", 1),16,"cup"), InventoryEntry(Ingredient("Flour", 2),24,"oz")]
     return render_template("shoppinglist.html", shoppinglist=test, shoppinglist_JSON='{"1":{"ingredient":{"name":"Rice", "id":1}, "quantity":16, "unit":"cup"}, "2":{"ingredient":{"name":"Flour", "id":2}, "quantity":24, "unit":"oz"}}')
+
+@app.route("/ingredients/data")
+def get_ingredient_data():
+    # TODO: Add ingredients JSON for users to add ingredients from
+    data = {}
+    return jsonify(data)

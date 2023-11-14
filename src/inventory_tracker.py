@@ -19,4 +19,4 @@ class InventoryTracker:
             self.inventory[id].deduct(quantity, unit)
 
     def jsonify(self):
-        return json.dumps({ie.ingredient.id: ie.jsonify() for ie in self.inventory.values()})
+        return json.dumps({str(ie.ingredient.id): ie.jsonify() for ie in self.inventory.values()})
