@@ -47,12 +47,12 @@ function submit(){
     if (button.attr("id") == "save") {
         let id = Number($("#id"));
         if (shoppinglist[id]){
-            form.attr("action", "/ingredients/modify")  
+            form.attr("action", "/shoppinglist/modify")
         } else {
-            form.attr("action", "/ingredients/add")  
+            form.attr("action", "/shoppinglist/add")
         }
     } else {
-        form.attr("action", "/ingredients/remove")  
+        form.attr("action", "/shoppinglist/remove")
     }
     form.submit();
 }
