@@ -8,7 +8,7 @@ import json
 
 class Recipe:
 
-    def __init__(self, id: str, name: str, ingredients: List[InventoryEntry], image_url=Optional[str]):
+    def __init__(self, id: str, name: str, ingredients: List[InventoryEntry], image_url: Optional[str] = None):
         self.id = id
         self.name = name
         self.image_url = image_url
