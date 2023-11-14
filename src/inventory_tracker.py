@@ -10,7 +10,7 @@ class InventoryTracker:
         self.inventory: Dict[str, InventoryEntry] = dict()
     
     def __str__(self):
-        return ",".join(map(lambda i: i.name, self.inventory))
+        return ",".join(map(lambda i: i.ingredient.name, self.inventory.values()))
 
     def add_entry(self, ie: InventoryEntry):
         self.inventory[str(ie.ingredient.id)] = ie

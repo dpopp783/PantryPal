@@ -14,7 +14,7 @@ class Recipe:
         self.image_url = image_url
         self.ingredients = ingredients
 
-    def jsonify(self, inv_tracker: InventoryTracker):
+    def to_dict(self, inv_tracker: InventoryTracker):
         data = dict()
         data["id"] = self.id
         data["name"] = self.name
@@ -30,7 +30,10 @@ class Recipe:
                 missedIngredients.append(ing_dict)
         data["usedIngredients"] = usedIngredients
         data["missedIngredients"] = missedIngredients
-        return json.dumps(data)
+        return data
+
+    def jsonify(self, inv_tracker: InventoryTracker):
+        return json.dumps(self.to_dict(inv_tracker))
 
 
 class RecipeRecommender:
@@ -47,15 +50,15 @@ class RecipeRecommender:
 
         for j in r.json():
             id = j["id"]
-            name = j["name"]
+            name = j["title"]
             image_url = j["image"]
             ingredients = []
             for ing in j["missedIngredients"]:
                 ingredients.append(InventoryEntry(Ingredient(ing["name"], ing["id"]), ing["amount"], ing["unit"]))
             for ing in j["usedIngredients"]:
                 ingredients.append(InventoryEntry(Ingredient(ing["name"], ing["id"]), ing["amount"], ing["unit"]))
-            self.recommendations.append(Recipe(id, name, image_url, ingredients))
+            self.recommendations.append(Recipe(id, name, ingredients, image_url))
         return self.recommendations
 
     def jsonify(self, inv_tracker: InventoryTracker):
-        return json.dumps({rec.id: rec.jsonify(inv_tracker) for rec in self.recommendations})
+        return json.dumps({rec.id: rec.to_dict(inv_tracker) for rec in self.recommendations})

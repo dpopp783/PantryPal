@@ -50,16 +50,22 @@ app = Flask(__name__)
 
 # Setup test InventoryTracker object
 inv_tracker = InventoryTracker()
-rice = InventoryEntry(Ingredient("Rice", 1), 1.0, "cup", datetime.datetime.strptime("2023-11-01", "%Y-%m-%d").date())
+rice = InventoryEntry(Ingredient("Rice", 1), 2.0, "cup", datetime.datetime.strptime("2023-12-28", "%Y-%m-%d").date())
+flour = InventoryEntry(Ingredient("Flour", 2), 10.0, "cup", datetime.date(2024, 9, 4))
+sugar = InventoryEntry(Ingredient("Sugar", 3), 8.0, "cup", datetime.date(2024, 5, 23))
+apple = InventoryEntry(Ingredient("Apple", 4), 6.0, "large", datetime.date(2023, 11, 18))
 inv_tracker.add_entry(rice)
-next_id_inv = 2
+inv_tracker.add_entry(flour)
+inv_tracker.add_entry(sugar)
+inv_tracker.add_entry(apple)
+next_id_inv = 5
 
 # Setup test ShoppingList object
 shop_list = ShoppingList()
 rice = InventoryEntry(Ingredient("Rice", 1), 16, "cup")
-flour = InventoryEntry(Ingredient("Flour", 2), 24, "oz")
+cheddar = InventoryEntry(Ingredient("Cheddar", 2), 24, "oz")
 shop_list.add_item(rice)
-shop_list.add_item(flour)
+shop_list.add_item(cheddar)
 next_id_sl = 3
 
 # setup test RecipeRecommender object
@@ -112,7 +118,10 @@ def ingredients_modify():
     new_name = request.form["name"]
     new_quantity = float(request.form["quantity"])
     new_unit = request.form["unit"]
-    new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+    if len(request.form['expiration_date']):
+        new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+    else:
+        new_exp_date = None
     inv_tracker.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
     return redirect("/ingredients")
 
@@ -125,6 +134,8 @@ def ingredients_remove():
 
 @app.route("/recipes")
 def recipes():
+    recipe_recommender.get_recommendations(inv_tracker.__str__(), 2)
+    print(recipe_recommender.jsonify(inv_tracker))
     return render_template("recipes.html")
 
 
