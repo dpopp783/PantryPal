@@ -1,11 +1,12 @@
 import sys
+sys.path.append('src')
 import pytest
 from recipe_recommender import Recipe, RecipeRecommender
 from inventory_entry import InventoryEntry, Ingredient
 from inventory_tracker import InventoryTracker
 import json
 
-sys.path.append('src')
+#sys.path.append('src')
 
 
 # Test for Recipe class
