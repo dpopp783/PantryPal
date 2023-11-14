@@ -106,6 +106,12 @@ def ingredients_add():
 
 @app.route("/ingredients/modify", methods=["POST"])
 def ingredients_modify():
+    mod_id = request.form["id"]
+    new_name = request.form["name"]
+    new_quantity = float(request.form["quantity"])
+    new_unit = request.form["unit"]
+    new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+    inv_tracker.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
     return redirect("/ingredients")
 
 
@@ -140,6 +146,11 @@ def add_shoppinglist():
 
 @app.route("/shoppinglist/modify", methods=["POST"])
 def modify_shoppinglist():
+    mod_id = request.form["id"]
+    new_name = request.form["name"]
+    new_quantity = float(request.form["quantity"])
+    new_unit = request.form["unit"]
+    shop_list.modify_item(mod_id, new_name, new_quantity, new_unit)
     return redirect("/shoppinglist")
 
 
