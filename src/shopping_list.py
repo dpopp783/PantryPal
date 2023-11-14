@@ -1,4 +1,4 @@
-from inventory_entry import InventoryEntry
+from inventory_entry import InventoryEntry, Ingredient
 from typing import Dict
 import json
 
@@ -13,6 +13,10 @@ class ShoppingList:
 
     def remove_item(self, id: str):
         self.shopping_list.pop(id)
+
+    def modify_item(self, id: str, new_name: str, new_quantity: float, new_unit: str):
+        self.remove_item(id)
+        self.add_entry(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit))
 
     def jsonify(self):
         return json.dumps({ie.ingredient.id: ie.to_dict() for ie in self.shopping_list.values()})
