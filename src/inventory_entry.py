@@ -62,10 +62,10 @@ class InventoryEntry:
         return json.dumps({"ingredient": {"name": self._ingredient.name, "id": self._ingredient.id},
                            "quantity": self._quantity,
                            "unit": self._unit,
-                           "expiration_date": str(self._expiration_date)})
+                           "expiration_date": self._expiration_date.strftime('%Y-%m-%d') if self._expiration_date is not None else ""})
     
     def to_dict(self):
         return {"ingredient": {"name": self._ingredient.name, "id": self._ingredient.id},
-                           "quantity": self._quantity,
-                           "unit": self._unit,
-                           "expiration_date": str(self._expiration_date)}
+                "quantity": self._quantity,
+                "unit": self._unit,
+                "expiration_date": self._expiration_date.strftime('%Y-%m-%d') if self._expiration_date is not None else ""}
