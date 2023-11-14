@@ -70,7 +70,7 @@
                                             <button class="btn btn-warning border-0" title="Modify Item" name="modify" data-bs-toggle="modal" data-bs-target="#modify-popup" data-id="{{item.ingredient.id}}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
-                                            <button class="btn btn-success border-0" title="Purchase Item" name="purchase">
+                                            <button class="btn btn-success border-0" title="Purchase Item" name="purchase" data-bs-toggle="modal" data-bs-target="#purchase-popup" data-id="{{item.ingredient.id}}">
                                                 <i class="bi bi-currency-dollar"></i>
                                             </button>
                                         </div>
@@ -113,6 +113,7 @@
                                     </div>
                                 </div>                 
                             </div>
+                            <input type="text" class="form-control" name="expiration_date" id="expiration_date" hidden>
                         </div>   
                     </form>
                 </div>
@@ -126,6 +127,28 @@
                     </button>
                 </div>
         
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="purchase-popup">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+        
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Expiration Date</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+        
+                <div class="modal-body">
+                    <input type="date" class="form-control" name="expiration_date" id="p-expiration_date">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="purchase">
+                        <i class="bi bi-check"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
