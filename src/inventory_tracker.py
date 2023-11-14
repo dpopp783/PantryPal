@@ -12,7 +12,10 @@ class InventoryTracker:
         return ",".join(map(lambda i: i.name, self.inventory))
 
     def add_entry(self, ie: InventoryEntry):
-        self.inventory[ie.ingredient.id] = ie
+        self.inventory[str(ie.ingredient.id)] = ie
+
+    def remove_entry(self, id: str):
+        self.inventory.pop(id)
 
     def deduct_ingredients(self, ids: List, quantities: List, units: List):
         for id, quantity, unit in zip(ids, quantities, units):
