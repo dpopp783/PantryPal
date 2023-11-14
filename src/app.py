@@ -160,6 +160,15 @@ def remove_shoppinglist():
     return redirect("/shoppinglist")
 
 
+@app.route("/shoppinglist/purchase", methods=["POST"])
+def purhcase_shoppinglist():
+    pur_id = request.form["id"]
+    # TODO request expiration date from user when you hit the purchase button
+    inv_tracker.add_entry(shop_list.shopping_list[pur_id])
+    shop_list.remove_item(pur_id)
+    return redirect("/shoppinglist")
+
+
 @app.route("/ingredients/data")
 def get_ingredient_data():
     # TODO: Add ingredients JSON for users to add ingredients from
