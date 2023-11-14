@@ -3,6 +3,8 @@ from flask import *
 # import config
 from inventory_tracker import InventoryTracker
 from inventory_entry import InventoryEntry, Ingredient
+from shopping_list import ShoppingList
+from recipe_recommender import Recipe, RecipeRecommender
 import datetime
 #import psycopg2
 #from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
@@ -46,12 +48,19 @@ import csv
 
 app = Flask(__name__)
 
-
+# Setup test InventoryTracker object
 inv_tracker = InventoryTracker()
 rice = InventoryEntry(Ingredient("Rice", 1), 1.0, "cup", datetime.datetime.strptime("2023-11-01", "%Y-%m-%d").date())
 inv_tracker.add_entry(rice)
+next_id_inv = 2
 
-next_id = 2
+# Setup test ShoppingList object
+shop_list = ShoppingList()
+rice = InventoryEntry(Ingredient("Rice", 1),16,"cup")
+flour = InventoryEntry(Ingredient("Flour", 2),24,"oz")
+shop_list.add_item(rice)
+shop_list.add_item(flour)
+next_id_sl = 3
 
 
 @app.route("/")
@@ -79,38 +88,57 @@ def ingredients():
     # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
     return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
 
+
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():
-    global next_id
+    global next_id_inv
     print(request.form)
     if request.method == "POST":
         name = request.form['name']
         quantity = float(request.form['quantity'])
         unit = request.form['unit']
         exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
-        new_ingredient = InventoryEntry(Ingredient(name, next_id), quantity, unit, exp_date)
+        new_ingredient = InventoryEntry(Ingredient(name, next_id_inv), quantity, unit, exp_date)
         inv_tracker.add_entry(new_ingredient)
         print(inv_tracker.jsonify())
-    next_id += 1
+    next_id_inv += 1
     return redirect("/ingredients")
+
 
 @app.route("/ingredients/modify", methods=["POST"])
 def ingredients_modify():
-    return render_template("ingredients.html")
+    return redirect("/ingredients")
+
 
 @app.route("/ingredients/remove", methods=["POST"])
 def ingredients_remove():
-    return render_template("ingredients.html")
+    return redirect("/ingredients")
+
 
 @app.route("/recipes")
 def recipes():
     return render_template("recipes.html")
 
+
 @app.route("/shoppinglist")
 def shoppinglist():
+    return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
 
-    test = [InventoryEntry(Ingredient("Rice", 1),16,"cup"), InventoryEntry(Ingredient("Flour", 2),24,"oz")]
-    return render_template("shoppinglist.html", shoppinglist=test, shoppinglist_JSON='{"1":{"ingredient":{"name":"Rice", "id":1}, "quantity":16, "unit":"cup"}, "2":{"ingredient":{"name":"Flour", "id":2}, "quantity":24, "unit":"oz"}}')
+
+@app.route("/shoppinglist/add", methods=["POST"])
+def add_shoppinglist():
+    return redirect("/shoppinglist")
+
+
+@app.route("/shoppinglist/modify", methods=["POST"])
+def modify_shoppinglist():
+    return redirect("/shoppinglist")
+
+
+@app.route("/shoppinglist/remove", methods=["POST"])
+def remove_shoppinglist():
+    return redirect("/shoppinglist")
+
 
 @app.route("/ingredients/data")
 def get_ingredient_data():
