@@ -3,7 +3,7 @@ from flask import *
 # import config
 from inventory_tracker import InventoryTracker
 from inventory_entry import InventoryEntry, Ingredient
-from datetime import date
+import datetime
 #import psycopg2
 #from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import csv
@@ -47,6 +47,13 @@ import csv
 app = Flask(__name__)
 
 
+inv_tracker = InventoryTracker()
+rice = InventoryEntry(Ingredient("Rice", 1), 1.0, "cup", datetime.datetime.strptime("2023-11-01", "%Y-%m-%d").date())
+inv_tracker.add_entry(rice)
+
+next_id = 2
+
+
 @app.route("/")
 def login():
     return render_template("dashboard.html")
@@ -59,7 +66,6 @@ def dashboard():
 
 @app.route("/ingredients", methods=["GET"])
 def ingredients():
-    test = InventoryTracker()
 
     # cur.execute('SELECT * FROM inventory_entry')
     # entries = cur.fetchall()
@@ -70,14 +76,23 @@ def ingredients():
     #     ing_name = cur.fetchall()[0][0]
     #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
 
-    test.inventory = {1: InventoryEntry(Ingredient("Rice", 1), 1, "cup", "2023-11-01")}
-    a = '{"1":{"ingredient":{"name":"Rice", "id":1}, "quantity":1, "unit":"cup", "expiration_date":"2023-11-01"}}'
     # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
-    return render_template("ingredients.html", inventory=test.inventory, inventory_JSON = test.jsonify())
+    return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
 
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():
-    return render_template("ingredients.html")
+    global next_id
+    print(request.form)
+    if request.method == "POST":
+        name = request.form['name']
+        quantity = float(request.form['quantity'])
+        unit = request.form['unit']
+        exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+        new_ingredient = InventoryEntry(Ingredient(name, next_id), quantity, unit, exp_date)
+        inv_tracker.add_entry(new_ingredient)
+        print(inv_tracker.jsonify())
+    next_id += 1
+    return redirect("/ingredients")
 
 @app.route("/ingredients/modify", methods=["POST"])
 def ingredients_modify():
