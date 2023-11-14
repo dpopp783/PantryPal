@@ -112,7 +112,10 @@ def ingredients_modify():
     new_name = request.form["name"]
     new_quantity = float(request.form["quantity"])
     new_unit = request.form["unit"]
-    new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+    if len(request.form['expiration_date']):
+        new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+    else:
+        new_exp_date = None
     inv_tracker.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
     return redirect("/ingredients")
 
