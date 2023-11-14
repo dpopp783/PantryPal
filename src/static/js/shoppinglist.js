@@ -4,9 +4,6 @@ $(document).ready( () => {
     $("#search").on("input", search);
 
     $("#modify-popup").on("show.bs.modal", modify);
-    $("#modify-popup").on("hidden.bs.modal", () => {
-        $("#modify-form")[0].reset()
-    });
 
     $("#save").on("click", submit);
     $("#remove").on("click", submit);
@@ -30,6 +27,8 @@ function filter(){
 }
 
 function modify(event){
+    $("#modify-form")[0].reset()
+    
     let id = Number($(event.relatedTarget).data("id"));
 
     if (id) {
