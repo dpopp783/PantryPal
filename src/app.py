@@ -111,6 +111,7 @@ def ingredients_modify():
 
 @app.route("/ingredients/remove", methods=["POST"])
 def ingredients_remove():
+    inv_tracker.remove_entry(request.form["id"])
     return redirect("/ingredients")
 
 
@@ -144,6 +145,7 @@ def modify_shoppinglist():
 
 @app.route("/shoppinglist/remove", methods=["POST"])
 def remove_shoppinglist():
+    shop_list.remove_item(request.form["id"])
     return redirect("/shoppinglist")
 
 
