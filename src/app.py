@@ -92,7 +92,6 @@ def ingredients():
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():
     global next_id_inv
-    print(request.form)
     if request.method == "POST":
         name = request.form['name']
         quantity = float(request.form['quantity'])
@@ -127,6 +126,14 @@ def shoppinglist():
 
 @app.route("/shoppinglist/add", methods=["POST"])
 def add_shoppinglist():
+    global next_id_sl
+    if request.method == "POST":
+        name = request.form['name']
+        quantity = float(request.form['quantity'])
+        unit = request.form['unit']
+        new_ingredient = InventoryEntry(Ingredient(name, next_id_sl), quantity, unit)
+        shop_list.add_item(new_ingredient)
+    next_id_sl += 1
     return redirect("/shoppinglist")
 
 
