@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
-# from config import api_key
+from config import api_key
 import requests
 import json
 
@@ -22,7 +22,7 @@ def convert(ingredient: str, source_amount: float, source_unit: str, target_unit
     return r.json()["targetAmount"]
 
 
-class InventoryEntry:
+class InventoryEntry: 
 
     def __init__(self, ingredient: Ingredient, quantity: float = 0, unit: str = "", expiration_date: date = None):
         self._ingredient = ingredient
