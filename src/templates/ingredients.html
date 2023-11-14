@@ -11,14 +11,13 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-secondary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">PantryPal</a>
-            <div class="collapse navbar-collapse">
+            <h1>PantryPal</h1>
+            <div class="collapse navbar-collapse ps-2">
                 <div class="navbar-nav">
-                    <!-- TODO: Update links -->
-                    <a class="nav-link" href="#">Dashboard</a>
+                    <a class="nav-link" href="/dashboard" >Dashboard</a>
                     <a class="nav-link active" aria-current="page" href="#">Ingredients</a>
-                    <a class="nav-link" href="#">Recipes</a>
-                    <a class="nav-link" href="#">Shopping List</a>
+                    <a class="nav-link" href="/recipes">Recipes</a>
+                    <a class="nav-link" href="/shoppinglist" >Shopping List</a>
                 </div>
             </div>
         </div>
@@ -47,8 +46,7 @@
             <div class="col-4"></div>
             <div class="col-2 btn-group">
                 <button class="btn btn-success" title="Add Item" id="add" data-bs-toggle="modal" data-bs-target="#modify-popup">
-                    <i class="bi bi-plus-square"></i>
-                    <span>  Add Item</span> 
+                    <i class="bi bi-plus-square"></i> Add Item 
                 </button>
             </div>
         </div>
@@ -65,7 +63,7 @@
                         </div>
                         <div class="card-body pt-1" id="inventory">
                             {% for item in inventory %}
-                                <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{item.ingredient.id}}" style="align-items: center;">
+                                <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{item.ingredient.id}}" name="{{item.ingredient.name}}" style="align-items: center;">
                                     <div class="col-4">{{item.ingredient.name}}</div>
                                     <div class="col-4">{{item.quantity}} {{item.unit}}</div>
                                     <div class="col-3">{{item.expiration_date}}</div>
@@ -100,19 +98,19 @@
                             <div class="form-group">
                                 <label class="col-form-label">Ingredient:</label>
                                 <input type="text" class="form-control" name="id" id="id" hidden>
-                                <input type="text" class="form-control" anme="name" id="name" disabled>
+                                <input type="text" class="form-control" name="name" id="name" disabled>
                             </div>
                             <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label class="col-form-label">Quantity:</label>
-                                            <input type="text" class="form-control" name="quantity" id="quantity">
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="col-form-label">Unit:</label>
-                                            <input type="text" class="form-control" name="unit" id="unit">
-                                        </div>
-                                    </div>                 
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="col-form-label">Quantity:</label>
+                                        <input type="text" class="form-control" name="quantity" id="quantity">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="col-form-label">Unit:</label>
+                                        <input type="text" class="form-control" name="unit" id="unit">
+                                    </div>
+                                </div>                 
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">Expiration Date:</label>

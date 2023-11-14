@@ -11,13 +11,12 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-secondary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">PantryPal</a>
-            <div class="collapse navbar-collapse">
+            <h1>PantryPal</h1>
+            <div class="collapse navbar-collapse ps-2">
                 <div class="navbar-nav">
-                    <!-- TODO: Update links -->
-                    <a class="nav-link" href="#">Dashboard</a>
-                    <a class="nav-link" href="#">Ingredients</a>
-                    <a class="nav-link" href="#">Recipes</a>
+                    <a class="nav-link" href="/dashboard" >Dashboard</a>
+                    <a class="nav-link" href="/ingredients">Ingredients</a>
+                    <a class="nav-link" href="/recipes">Recipes</a>
                     <a class="nav-link active" aria-current="page" href="#">Shopping List</a>
                 </div>
             </div>
@@ -44,18 +43,10 @@
                     <input type="text" class="form-control" id="search" placeholder="Search...">
                 </div>
             </div>
-            <div class="col-3"></div>
-            <div class="col-3 btn-group">
-                <button class="btn btn-success" title="Add Item" id="add">
-                    <i class="bi bi-plus-square"></i>
-                </button>
-
-                <button class="btn btn-danger" title="Reset Changes" id="reset">
-                    <i class="bi bi-arrow-counterclockwise"></i>
-                </button>
-
-                <button class="btn btn-success" title="Save Changes" id="save">
-                    <i class="bi bi-floppy"></i>  
+            <div class="col-4"></div>
+            <div class="col-2 btn-group">
+                <button class="btn btn-success" title="Add Item" id="add" data-bs-toggle="modal" data-bs-target="#modify-popup">
+                    <i class="bi bi-plus-square"></i> Add Item 
                 </button>
             </div>
         </div>
@@ -65,24 +56,22 @@
                     <div style="height: 50vh; overflow-y: scroll;">
                         <div class="card-header bg-info sticky-top" style="border-radius: 0;">
                             <div class="row pe-1" style="font-weight: 700;">
-                                <div class="col-4">Ingredient:</div>
-                                <div class="col-4">Quantity:</div>
-                                <div class="col-4"></div>
+                                <div class="col-5">Ingredient:</div>
+                                <div class="col-5">Quantity:</div>
                             </div>
                         </div>
                         <div class="card-body pt-1" id="shoppinglist">
                             {% for item in shoppinglist %}
-                                <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{item.ingredient.id}}" style="align-items: center;">
-                                    <div class="col-4">{{item.ingredient.name}}</div>
-                                    <div class="col-4">{{item.quantity}} {{item.unit}}</div>
-                                    <div class="col-3"></div>
+                                <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{item.ingredient.id}}" name="{{item.ingredient.name}}" style="align-items: center;">
+                                    <div class="col-5">{{item.ingredient.name}}</div>
+                                    <div class="col-5">{{item.quantity}} {{item.unit}}</div>
                                     <div class="col-1">
                                         <div class="btn-group">
-                                            <button class="btn btn-warning border-0" title="Modify Item" name="modify">
+                                            <button class="btn btn-warning border-0" title="Modify Item" name="modify" data-bs-toggle="modal" data-bs-target="#modify-popup" data-id="{{item.ingredient.id}}">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
-                                            <button class="btn btn-danger border-0" title="Remove Item" name="remove">
-                                                <i class="bi bi-trash3-fill"></i>
+                                            <button class="btn btn-success border-0" title="Modify Item" name="purchase">
+                                                <i class="bi bi-currency-dollar"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -94,6 +83,52 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal" id="modify-popup">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+        
+                <div class="modal-header">
+                    <h5 class="modal-title">Modify Ingredient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+        
+                <div class="modal-body">
+                    <form id="modify-form" method="post">
+                        <div class="container">
+                            <div class="form-group">
+                                <label class="col-form-label">Ingredient:</label>
+                                <input type="text" class="form-control" name="id" id="id" hidden>
+                                <input type="text" class="form-control" name="name" id="name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="col-form-label">Quantity:</label>
+                                        <input type="text" class="form-control" name="quantity" id="quantity">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="col-form-label">Unit:</label>
+                                        <input type="text" class="form-control" name="unit" id="unit">
+                                    </div>
+                                </div>                 
+                            </div>
+                        </div>   
+                    </form>
+                </div>
+        
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="save">
+                        <i class="bi bi-floppy-fill"></i>  
+                    </button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="remove">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                </div>
+        
+            </div>
+        </div>
+    </div>
 </body>
 
 <footer>
@@ -102,6 +137,7 @@
     </script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="static/js/shoppinglist.js"></script>
 </footer>
