@@ -46,8 +46,8 @@ function submit(){
     let button = $(this);
 
     if (button.attr("id") == "save") {
-        let id = Number($("#id"));
-        if (inventory[id]){ // TODO: Make this display name but use ID
+        let id = Number($("#id").val());
+        if (inventory[id]){
             form.attr("action", "/ingredients/modify")  
         } else {
             form.attr("action", "/ingredients/add")  
@@ -55,6 +55,5 @@ function submit(){
     } else {
         form.attr("action", "/ingredients/remove")  
     }
-
     form.submit();
 }

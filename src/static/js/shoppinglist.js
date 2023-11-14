@@ -7,6 +7,7 @@ $(document).ready( () => {
 
     $("#save").on("click", submit);
     $("#remove").on("click", submit);
+    $("[name='purchase']").on("click", purchase);
 });
 
 function search(){
@@ -45,7 +46,7 @@ function submit(){
     let button = $(this);
 
     if (button.attr("id") == "save") {
-        let id = Number($("#id"));
+        let id = Number($("#id").val());
         if (shoppinglist[id]){
             form.attr("action", "/shoppinglist/modify")
         } else {
@@ -54,5 +55,19 @@ function submit(){
     } else {
         form.attr("action", "/shoppinglist/remove")
     }
+    form.submit();
+}
+
+function purchase(){ // TODO: Add method of getting expiration date from the user.
+    let form = $("#modify-form");
+    let id = Number($(this).closest(".item.row").attr("id"));
+    let item = shoppinglist[id];
+
+    $("#id").val(id);
+    $("#name").val(item.ingredient.name);
+    $("#quantity").val(item.quantity);
+    $("#unit").val(item.unit);
+
+    form.attr("action", "/shoppinglist/purchase")
     form.submit();
 }
