@@ -1,6 +1,7 @@
 from inventory_entry import InventoryEntry, Ingredient
 from typing import List, Dict
 import json
+import datetime
 
 
 class InventoryTracker:
@@ -16,6 +17,11 @@ class InventoryTracker:
 
     def remove_entry(self, id: str):
         self.inventory.pop(id)
+
+    def modify_entry(self, id: str, new_name: str, new_quantity: float, new_unit: str, new_exp_date: datetime.date):
+        self.remove_entry(id)
+        self.add_entry(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit, new_exp_date))
+
 
     def deduct_ingredients(self, ids: List, quantities: List, units: List):
         for id, quantity, unit in zip(ids, quantities, units):
