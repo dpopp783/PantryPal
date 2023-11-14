@@ -21,13 +21,16 @@ class Recipe:
         usedIngredients = []
         missedIngredients = []
         for ingredient in self.ingredients:
-            if ingredient.id in inv_tracker.inventory.keys():
+            ing_dict = ingredient.to_dict()
+            ing_dict.pop("expiration_date")
+            if str(ingredient.ingredient.id) in inv_tracker.inventory.keys():
                 # TODO check if they have enough of the ingredient
-                usedIngredients.append(ingredient.jsonify())
+                usedIngredients.append(ing_dict)
             else:
-                missedIngredients.append(ingredient.jsonify())
+                missedIngredients.append(ing_dict)
         data["usedIngredients"] = usedIngredients
         data["missedIngredients"] = missedIngredients
+        return json.dumps(data)
 
 
 class RecipeRecommender:

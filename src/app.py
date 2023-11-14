@@ -56,12 +56,14 @@ next_id_inv = 2
 
 # Setup test ShoppingList object
 shop_list = ShoppingList()
-rice = InventoryEntry(Ingredient("Rice", 1),16,"cup")
-flour = InventoryEntry(Ingredient("Flour", 2),24,"oz")
+rice = InventoryEntry(Ingredient("Rice", 1), 16, "cup")
+flour = InventoryEntry(Ingredient("Flour", 2), 24, "oz")
 shop_list.add_item(rice)
 shop_list.add_item(flour)
 next_id_sl = 3
 
+# setup test RecipeRecommender object
+recipe_recommender = RecipeRecommender()
 
 @app.route("/")
 def login():
@@ -161,7 +163,7 @@ def remove_shoppinglist():
 
 
 @app.route("/shoppinglist/purchase", methods=["POST"])
-def purhcase_shoppinglist():
+def purchase_shoppinglist():
     pur_id = request.form["id"]
     # TODO request expiration date from user when you hit the purchase button
     inv_tracker.add_entry(shop_list.shopping_list[pur_id])
