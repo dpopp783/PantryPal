@@ -32,19 +32,19 @@
                     <h1>Hello, USER! Welcome to PantryPal!</h1>
                 </div>
                 <div class="row my-4">
-                    <h2>You currently have {{inventory | length}} ingredients in your pantry.</h2>
+                    <h3>You currently have {{inventory | length}} ingredients in your pantry.</h2>
                 </div>
                 <div class="row my-4">
-                    <h2>You currently have {{shoppinglist | length}} ingredients on your shopping list.</h2>
+                    <h3>You currently have {{shoppinglist | length}} ingredients on your shopping list.</h2>
                 </div>
             </div>
             <!-- Featured recipe -->
             <div class="col-6">
-                <h5>Featured Recipe:</h5>
+                <h3 class="my-3">Featured Recipe:</h3>
                 <div class="card w-100 my-2">
-                    <img class="card-img-top" src="...">
+                    <img class="card-img-top" src="{{recipe.image}}">
                     <div class="card-body">
-                        
+                        <h5 class="card-title">{{recipe.name}}</h5>
                     </div>
                 </div>
             </div>
@@ -53,10 +53,6 @@
 </body>
 
 <footer>
-    <script>
-        // var inventory = JSON.parse('{{ inventory_JSON | safe }}')
-    </script>
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

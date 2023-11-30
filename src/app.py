@@ -76,10 +76,12 @@ def login():
 @app.route("/dashboard")
 def dashboard():
     test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
+    test2 =  recipe_recommender.get_recommendations(inv_tracker.__str__(), 1)[0].to_dict(inv_tracker)
+    print(test2)
     return render_template("dashboard.html", 
         inventory = inv_tracker.inventory, 
         shoppinglist = shop_list.shopping_list.values(),
-        recipes = recipe_recommender.get_recommendations(inv_tracker.__str__(), 1),
+        recipe = test2 ,
         )
 
 
@@ -137,7 +139,7 @@ def recipes():
     recipe_recommender.get_recommendations(inv_tracker, 2)
     print(recipe_recommender.jsonify(inv_tracker))
     test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
-    return render_template("recipes.html", recipes = test)
+    return render_template("recipes.html", recipes = test, recipes_JSON = json.dumps(test))
 
 
 @app.route("/recipes/search")
