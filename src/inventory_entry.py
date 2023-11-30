@@ -3,6 +3,31 @@ from datetime import date
 from config import api_key
 import requests
 import json
+import csv
+
+
+class PantryPalIngredientIDMap(object):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(PantryPalIngredientIDMap, cls).__new__(cls)
+            cls.instance.idMap = dict()
+            with open('src/top-1k-ingredients.csv') as ingredients:
+                reader = csv.reader(ingredients, delimiter=';')
+                for row in reader:
+                    ing_name, ing_id = row
+                    cls.instance.idMap[ing_id] = ing_name
+        return cls.instance
+
+    def get_id(self, name: str):
+        # TODO store these 1k top ingredients in a DB instead of dict
+        if name in self.idMap.values():
+            return int(list(self.idMap.keys())[list(self.idMap.values()).index(name)])
+        url = f"https://api.spoonacular.com/food/ingredients/search/?apiKey={api_key}&query={name}&number=1"
+        r = requests.get(url)
+        assert r.status_code == 200
+        # TODO error handling if there are no results
+        return int(r.json()['results'][0]['id'])
+
 
 
 @dataclass
