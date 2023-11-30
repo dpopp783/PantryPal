@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from config import api_key
 import requests
 import json
@@ -51,11 +51,13 @@ def convert(ingredient: str, source_amount: float, source_unit: str, target_unit
 
 class InventoryEntry: 
 
-    def __init__(self, ingredient: Ingredient, quantity: float = 0, unit: str = "", expiration_date: date = None):
+    def __init__(self, ingredient: Ingredient, quantity: float = 0, unit: str = "", expiration_date: date | str = None):
         self._ingredient = ingredient
         self._quantity = quantity
         self._unit = unit
         # TODO design issue: if multiple units of an ingredient have different expiration dates, how do we represent that?
+        if isinstance(expiration_date, str):
+            expiration_date = datetime.strptime(expiration_date, "%Y-%m-%d").date()
         self._expiration_date = expiration_date
 
     @property
@@ -76,7 +78,7 @@ class InventoryEntry:
 
     def deduct(self, amount, unit) -> float:
         if unit != self._unit:
-            quantity = convert(self._ingredient.name, amount, unit, self._unit)
+            amount = convert(self._ingredient.name, amount, unit, self._unit)
 
         # TODO error handling
         assert self._quantity >= amount
@@ -84,6 +86,12 @@ class InventoryEntry:
         self._quantity -= amount
 
         return self._quantity
+
+    def add(self, amount, unit):
+        if unit != self._unit:
+            amount = convert(self._ingredient.name, amount, unit, self._unit)
+            print(amount)
+        self._quantity += amount
 
     def jsonify(self):
         return json.dumps({"ingredient": {"name": self._ingredient.name, "id": self._ingredient.id},

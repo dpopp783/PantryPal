@@ -17,15 +17,19 @@ class InventoryTracker:
 
     def add_entry(self, name: str, quantity: float, unit: str, exp_date: datetime.date):
         idMap = PantryPalIngredientIDMap()
-        newEntry = InventoryEntry(Ingredient(name, idMap.get_id(name)), quantity, unit, exp_date)
-        self._add_entry(newEntry)
+        ing_id = idMap.get_id(name)
+        if str(ing_id) not in self.inventory.keys():
+            newEntry = InventoryEntry(Ingredient(name, ing_id), quantity, unit, exp_date)
+            self._add_entry(newEntry)
+        else:
+            self.inventory[str(ing_id)].add(quantity, unit)
 
     def remove_entry(self, id: str):
         self.inventory.pop(id)
 
     def modify_entry(self, id: str, new_name: str, new_quantity: float, new_unit: str, new_exp_date: datetime.date):
         self.remove_entry(id)
-        self.add_entry(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit, new_exp_date))
+        self._add_entry(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit, new_exp_date))
 
     def deduct_ingredients(self, ids: List, quantities: List, units: List):
         for id, quantity, unit in zip(ids, quantities, units):

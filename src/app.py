@@ -134,7 +134,7 @@ def ingredients_remove():
 
 @app.route("/recipes")
 def recipes():
-    recipe_recommender.get_recommendations(inv_tracker.__str__(), 2)
+    recipe_recommender.get_recommendations(inv_tracker, 2)
     print(recipe_recommender.jsonify(inv_tracker))
     test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
     return render_template("recipes.html", recipes = test)
@@ -183,7 +183,11 @@ def remove_shoppinglist():
 def purchase_shoppinglist():
     pur_id = request.form["id"]
     # TODO request expiration date from user when you hit the purchase button
-    inv_tracker.add_entry(shop_list.shopping_list[pur_id])
+    name = request.form['name']
+    quantity = float(request.form['quantity'])
+    unit = request.form['unit']
+    exp_date = request.form['expiration_date']
+    inv_tracker.add_entry(name, quantity, unit, exp_date)
     shop_list.remove_item(pur_id)
     return redirect("/shoppinglist")
 
