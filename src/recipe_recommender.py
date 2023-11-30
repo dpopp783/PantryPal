@@ -18,6 +18,7 @@ class Recipe:
         data = dict()
         data["id"] = self.id
         data["name"] = self.name
+        data["image"] = self.image_url
         usedIngredients = []
         missedIngredients = []
         for ingredient in self.ingredients:
@@ -62,3 +63,7 @@ class RecipeRecommender:
 
     def jsonify(self, inv_tracker: InventoryTracker):
         return json.dumps({rec.id: rec.to_dict(inv_tracker) for rec in self.recommendations})
+
+
+    def get_url(title: str, id: int):
+        return "https://spoonacular.com/recipes/" + {"-".join(title.lower().split(" "))} + "-" + str(id)

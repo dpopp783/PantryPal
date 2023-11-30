@@ -56,6 +56,9 @@ inv_tracker.add_entry("Rice", 2.0, "cup", datetime.datetime.strptime("2023-12-28
 inv_tracker.add_entry("Flour", 10.0, "cup", datetime.date(2024, 9, 4))
 inv_tracker.add_entry("Sugar", 8.0, "cup", datetime.date(2024, 5, 23))
 inv_tracker.add_entry("Apple", 6.0, "large", datetime.date(2023, 11, 18))
+inv_tracker.add_entry("Vinegar", 10.0, "cup", datetime.date(2024, 9, 4))
+inv_tracker.add_entry("Milk", 8.0, "cup", datetime.date(2024, 5, 23))
+inv_tracker.add_entry("Cheese", 6.0, "large", datetime.date(2023, 11, 18))
 
 # Setup test ShoppingList object
 shop_list = ShoppingList()
@@ -67,12 +70,18 @@ recipe_recommender = RecipeRecommender()
 
 @app.route("/")
 def login():
-    return render_template("dashboard.html")
+    return render_template("login.html")
 
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+    test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
+    return render_template("dashboard.html", 
+        inventory = inv_tracker.inventory, 
+        shoppinglist = shop_list.shopping_list.values(),
+        recipes = recipe_recommender.get_recommendations(inv_tracker.__str__(), 1),
+        )
+
 
 
 @app.route("/ingredients", methods=["GET"])
@@ -127,7 +136,15 @@ def ingredients_remove():
 def recipes():
     recipe_recommender.get_recommendations(inv_tracker.__str__(), 2)
     print(recipe_recommender.jsonify(inv_tracker))
-    return render_template("recipes.html")
+    test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
+    return render_template("recipes.html", recipes = test)
+
+
+@app.route("/recipes/search")
+def recipes_search():
+
+    return jsonify("{}")  # Return a JSON of results
+
 
 
 @app.route("/shoppinglist")

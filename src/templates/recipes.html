@@ -21,28 +21,14 @@
     </nav>
 
     <div class="container">
-        <div class="row py-5"></div>
         <div class="row py-2">
             <div class="col-3">
                 <div class="input-group">
                     <span class="input-group-text">
                         <i class="bi bi-funnel"></i>
                     </span>
-                    <input class="form-control" id="filter" placeholder="Filter by Ingredient...">
+                    <input class="form-control" id="search" placeholder="Search by Ingredient...">
                 </div>
-            </div>
-            <div class="col-3">
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-search"></i>
-                    </span>
-                    <input type="text" class="form-control" id="search" placeholder="Search Recipes...">
-                </div>
-            </div>
-            <div class="col-3 btn-group">
-                <button class="btn btn-success" title="Add Recipe" id="addRecipe" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
-                    <i class="bi bi-plus-square"></i> Add Recipe
-                </button>
             </div>
         </div>
         <div class="row">
@@ -51,45 +37,42 @@
                     <div style="height: 50vh; overflow-y: scroll;">
                         <div class="card-header bg-info sticky-top" style="border-radius: 0;">
                             <div class="row pe-1" style="font-weight: 700;">
-                                <div class="col-4">Recipe Name:</div>
-                                <div class="col-4">Ingredients:</div>
-                                <div class="col-4">Actions:</div>
+                                <div class="col-5">Recipe Name:</div>
+                                <div class="col-5">Ingredient Count:</div>
+                                <div class="col-2"></div>
                             </div>
                         </div>
                         <div class="card-body pt-1" id="recipeList">
-                            <!-- Recipes will be dynamically added here -->
+                            {% for recipe in recipes.values() %}
+                                <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{recipe.id}}" name="{{recipe.name}}" style="align-items: center;">
+                                    <div class="col-5">{{recipe.name}}</div>
+                                    <div class="col-5">{{"%d" % (recipe.usedIngredients|length + recipe.missedIngredients|length) }}</div>
+                                    <div class="col-2">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success border-0" title="View Recipe" name="view" data-bs-toggle="modal" data-bs-target="#view-popup" data-id="{{recipe.id}}">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
+        <div class="modal fade" id="view-popup">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addRecipeModalLabel">Add New Recipe</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="recipe-title">TODO: RECIPE NAME</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="addRecipeForm">
-                            <div class="mb-3">
-                                <label for="recipeName" class="form-label">Recipe Name</label>
-                                <input type="text" class="form-control" id="recipeName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipeIngredients" class="form-label">Ingredients</label>
-                                <textarea class="form-control" id="recipeIngredients" rows="3" required></textarea>
-                                <div class="form-text">Enter ingredients separated by commas.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="recipeSteps" class="form-label">Preparation Steps</label>
-                                <textarea class="form-control" id="recipeSteps" rows="3" required></textarea>
-                            </div>
-                        </form>
+                        
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="saveRecipe">Save Recipe</button>
+                        <button type="button" class="btn btn-primary" id="use-recipe">Use</button>
                     </div>
                 </div>
             </div>
@@ -97,6 +80,10 @@
     </div>
 
     <footer>
+        <script>
+            var recipes = JSON.parse('{{ recipes_JSON | safe }}')
+        </script>
+
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
         <script src="static/js/recipe.js"></script>
