@@ -2,7 +2,7 @@ from flask import *
 
 # import config
 from inventory_tracker import InventoryTracker
-from inventory_entry import InventoryEntry, Ingredient
+from inventory_entry import InventoryEntry, Ingredient, PantryPalIngredientIDMap
 from shopping_list import ShoppingList
 from recipe_recommender import Recipe, RecipeRecommender
 import datetime
@@ -49,24 +49,18 @@ import csv
 app = Flask(__name__)
 
 # Setup test InventoryTracker object
+
+idMap = PantryPalIngredientIDMap()
 inv_tracker = InventoryTracker()
-rice = InventoryEntry(Ingredient("Rice", 1), 2.0, "cup", datetime.datetime.strptime("2023-12-28", "%Y-%m-%d").date())
-flour = InventoryEntry(Ingredient("Flour", 2), 10.0, "cup", datetime.date(2024, 9, 4))
-sugar = InventoryEntry(Ingredient("Sugar", 3), 8.0, "cup", datetime.date(2024, 5, 23))
-apple = InventoryEntry(Ingredient("Apple", 4), 6.0, "large", datetime.date(2023, 11, 18))
-inv_tracker.add_entry(rice)
-inv_tracker.add_entry(flour)
-inv_tracker.add_entry(sugar)
-inv_tracker.add_entry(apple)
-next_id_inv = 5
+inv_tracker.add_entry("Rice", 2.0, "cup", datetime.datetime.strptime("2023-12-28", "%Y-%m-%d").date())
+inv_tracker.add_entry("Flour", 10.0, "cup", datetime.date(2024, 9, 4))
+inv_tracker.add_entry("Sugar", 8.0, "cup", datetime.date(2024, 5, 23))
+inv_tracker.add_entry("Apple", 6.0, "large", datetime.date(2023, 11, 18))
 
 # Setup test ShoppingList object
 shop_list = ShoppingList()
-rice = InventoryEntry(Ingredient("Rice", 1), 16, "cup")
-cheddar = InventoryEntry(Ingredient("Cheddar", 2), 24, "oz")
-shop_list.add_item(rice)
-shop_list.add_item(cheddar)
-next_id_sl = 3
+shop_list.add_item("Rice", 16, "cup")
+shop_list.add_item("Cheddar", 24, "oz")
 
 # setup test RecipeRecommender object
 recipe_recommender = RecipeRecommender()
@@ -105,10 +99,7 @@ def ingredients_add():
         quantity = float(request.form['quantity'])
         unit = request.form['unit']
         exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
-        new_ingredient = InventoryEntry(Ingredient(name, next_id_inv), quantity, unit, exp_date)
-        inv_tracker.add_entry(new_ingredient)
-        print(inv_tracker.jsonify())
-    next_id_inv += 1
+        inv_tracker.add_entry(name, quantity, unit, exp_date)
     return redirect("/ingredients")
 
 
@@ -151,9 +142,7 @@ def add_shoppinglist():
         name = request.form['name']
         quantity = float(request.form['quantity'])
         unit = request.form['unit']
-        new_ingredient = InventoryEntry(Ingredient(name, next_id_sl), quantity, unit)
-        shop_list.add_item(new_ingredient)
-    next_id_sl += 1
+        shop_list.add_item(name, quantity, unit)
     return redirect("/shoppinglist")
 
 

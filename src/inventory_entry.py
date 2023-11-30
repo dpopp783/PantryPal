@@ -11,7 +11,7 @@ class PantryPalIngredientIDMap(object):
         if not hasattr(cls, 'instance'):
             cls.instance = super(PantryPalIngredientIDMap, cls).__new__(cls)
             cls.instance.idMap = dict()
-            with open('src/top-1k-ingredients.csv') as ingredients:
+            with open('top-1k-ingredients.csv') as ingredients:
                 reader = csv.reader(ingredients, delimiter=';')
                 for row in reader:
                     ing_name, ing_id = row
