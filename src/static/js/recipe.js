@@ -8,8 +8,9 @@ function view (event) {
     console.log(id)
     if (id) {
         let recipe = recipes[id];
+        console.log(recipe)
 
-        $("#recipe-name").attr("text", recipe.name);
+        $("#recipe-name").html(recipe.name);
         $("#recipe-image").attr("src", recipe.image)
 
 

@@ -47,6 +47,7 @@ import csv
 # cur.execute("INSERT INTO inventory_entry(ingredient_id, amount, unit, expiration_date) VALUES(1009, 2, 'cup','2023-11-1')")
 
 app = Flask(__name__)
+global response
 
 # Setup test InventoryTracker object
 
@@ -68,27 +69,63 @@ shop_list.add_item("Cheddar", 24, "oz")
 # setup test RecipeRecommender object
 recipe_recommender = RecipeRecommender()
 
-@app.route("/")
+@app.route("/", methods=["GET"])
+def index():
+    global response
+    try:
+        pass
+    except Exception as e:
+        pass
+    return render_template("login.html", response = response)
+
+
+@app.route("/login", methods=["POST"])
 def login():
-    return render_template("login.html")
+    global response
+    try:
+        return redirect("/dashboard")
+    except Exception as e:
+        return redirect("/")
+    
+
+@app.route("/signup", methods=["POST"])
+def signup():
+    global response
+    try:
+        return redirect("/dashboard")
+    except Exception as e:
+        pass
+        return redirect("/")
 
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["GET"])
 def dashboard():
-    test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
-    test2 =  recipe_recommender.get_recommendations(inv_tracker.__str__(), 1)[0].to_dict(inv_tracker)
-    print(test2)
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
     return render_template("dashboard.html", 
         inventory = inv_tracker.inventory, 
         shoppinglist = shop_list.shopping_list.values(),
-        recipe = test2 ,
+        recipe = recipe_recommender.recommendations,
+        response = response
         )
-
 
 
 @app.route("/ingredients", methods=["GET"])
 def ingredients():
-
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+    
     # cur.execute('SELECT * FROM inventory_entry')
     # entries = cur.fetchall()
 
@@ -99,12 +136,19 @@ def ingredients():
     #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
 
     # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
-    return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
+    return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify(), response=response)
 
 
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():
-    global next_id_inv
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
     if request.method == "POST":
         name = request.form['name']
         quantity = float(request.form['quantity'])
@@ -116,6 +160,14 @@ def ingredients_add():
 
 @app.route("/ingredients/modify", methods=["POST"])
 def ingredients_modify():
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
     mod_id = request.form["id"]
     new_name = request.form["name"]
     new_quantity = float(request.form["quantity"])
@@ -130,33 +182,65 @@ def ingredients_modify():
 
 @app.route("/ingredients/remove", methods=["POST"])
 def ingredients_remove():
-    inv_tracker.remove_entry(request.form["id"])
+    global response
+    try:
+        inv_tracker.remove_entry(request.form["id"])
+        response = f"Success: Removed '{request.form['name']}'."
+    except Exception as e:
+        response = f"Error: Ingredient '{request.form['name']}' not found in database."
     return redirect("/ingredients")
 
 
-@app.route("/recipes")
+@app.route("/recipes", methods=["GET"])
 def recipes():
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
     recipe_recommender.get_recommendations(inv_tracker, 2)
-    print(recipe_recommender.jsonify(inv_tracker))
-    test = {"648742": {"id": 648742, "name": "Kappa Maki", "usedIngredients": [], "missedIngredients": [{"ingredient": {"name": "japanese cucumber", "id": 11206}, "quantity": 2.0, "unit": ""}, {"ingredient": {"name": "of nori", "id": 11446}, "quantity": 4.0, "unit": "inches sheets"}, {"ingredient": {"name": "sushi rice", "id": 10220054}, "quantity": 4.0, "unit": "cups"}]}, "633547": {"id": 633547, "name": "Baked Cinnamon Apple Slices", "usedIngredients": [{"ingredient": {"name": "apples and - whatever type of apples i have in my refrigerator", "id": 9003}, "quantity": 4.0, "unit": ""}], "missedIngredients": [{"ingredient": {"name": "cinnamon", "id": 2010}, "quantity": 1.5, "unit": "tablespoons"}, {"ingredient": {"name": "raisins", "id": 9299}, "quantity": 0.5, "unit": "cup"}]}}
-    return render_template("recipes.html", recipes = test, recipes_JSON = json.dumps(test))
+    return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker), response=response)
 
 
-@app.route("/recipes/search")
+@app.route("/recipes/search", methods=["POST"])
 def recipes_search():
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
 
     return jsonify("{}")  # Return a JSON of results
 
 
 
-@app.route("/shoppinglist")
+@app.route("/shoppinglist", methods=["GET"])
 def shoppinglist():
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+    
     return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
 
 
 @app.route("/shoppinglist/add", methods=["POST"])
 def add_shoppinglist():
-    global next_id_sl
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
     if request.method == "POST":
         name = request.form['name']
         quantity = float(request.form['quantity'])
@@ -167,6 +251,14 @@ def add_shoppinglist():
 
 @app.route("/shoppinglist/modify", methods=["POST"])
 def modify_shoppinglist():
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
     mod_id = request.form["id"]
     new_name = request.form["name"]
     new_quantity = float(request.form["quantity"])
@@ -177,12 +269,28 @@ def modify_shoppinglist():
 
 @app.route("/shoppinglist/remove", methods=["POST"])
 def remove_shoppinglist():
-    shop_list.remove_item(request.form["id"])
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
+    
     return redirect("/shoppinglist")
 
 
 @app.route("/shoppinglist/purchase", methods=["POST"])
 def purchase_shoppinglist():
+    global response
+    try:
+        
+        response = "Success: "
+    except Exception as e:
+        
+        response = "Error: "
+
     pur_id = request.form["id"]
     # TODO request expiration date from user when you hit the purchase button
     name = request.form['name']
@@ -194,8 +302,4 @@ def purchase_shoppinglist():
     return redirect("/shoppinglist")
 
 
-@app.route("/ingredients/data")
-def get_ingredient_data():
-    # TODO: Add ingredients JSON for users to add ingredients from
-    data = {}
-    return jsonify(data)
+app.run(debug = True)
