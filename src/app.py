@@ -47,7 +47,7 @@ import csv
 # cur.execute("INSERT INTO inventory_entry(ingredient_id, amount, unit, expiration_date) VALUES(1009, 2, 'cup','2023-11-1')")
 
 app = Flask(__name__)
-global response
+response = ""
 
 # Setup test InventoryTracker object
 

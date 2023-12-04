@@ -4,6 +4,7 @@ from config import api_key
 import requests
 import json
 import csv
+from typing import Union
 
 
 class PantryPalIngredientIDMap(object):
@@ -51,7 +52,7 @@ def convert(ingredient: str, source_amount: float, source_unit: str, target_unit
 
 class InventoryEntry: 
 
-    def __init__(self, ingredient: Ingredient, quantity: float = 0, unit: str = "", expiration_date: date | str = None):
+    def __init__(self, ingredient: Ingredient, quantity: float = 0, unit: str = "", expiration_date: Union[date, str] = None):
         self._ingredient = ingredient
         self._quantity = quantity
         self._unit = unit
