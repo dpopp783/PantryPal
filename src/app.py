@@ -61,6 +61,11 @@ def login():
     try:
         username = request.form["username"]
         password = request.form["password"]
+
+        if not username or not password:
+            flash("Please enter both username and password.", "danger")
+            return redirect("/")
+
         
         with open("accounts.json", "r") as f:
             accounts: dict = json.load(f)
@@ -83,6 +88,10 @@ def signup():
     try:
         username = request.form["username"]
         password = request.form["password"]
+
+        if not username or not password:
+            flash("Please enter both username and password.", "danger")
+            return redirect("/")
 
         if " " in username:
             raise ValueError("Username cannot contain spaces")
