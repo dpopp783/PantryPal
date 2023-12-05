@@ -280,6 +280,7 @@ def shoppinglist():
         
         except Exception as e:
             flash(str(e), "danger")
+
         return render_template("shoppinglist.html", shoppinglist={}, shoppinglist_JSON={})
     else:
         flash("Please log in to use PantryPal", "danger")
@@ -290,15 +291,19 @@ def shoppinglist():
 def add_shoppinglist():
     if session.get("username", None):
         try:
-            pass
-        except Exception as e:
-            flash(str(e), "danger")
-
-        if request.method == "POST":
             name = request.form['name']
             quantity = float(request.form['quantity'])
             unit = request.form['unit']
-            shop_list.add_item(name, quantity, unit)
+
+            shop = ShoppingList(session["username"])
+            shop.add_item(name, quantity, unit)
+
+            save_data(session["username"], shop.to_dict(), "shoppinglist")
+            flash(f"Sucessfully added '{name}' to your shopping list", "success")
+
+        except Exception as e:
+            flash(str(e), "danger")
+
         return redirect("/shoppinglist")
     else:
         flash("Please log in to use PantryPal", "danger")
@@ -309,15 +314,20 @@ def add_shoppinglist():
 def modify_shoppinglist():
     if session.get("username", None):
         try:  
-            pass
+            mod_id = request.form["id"]
+            new_name = request.form["name"]
+            new_quantity = float(request.form["quantity"])
+            new_unit = request.form["unit"]
+
+            shop = ShoppingList(session["username"])
+            shop.modify_item(mod_id, new_name, new_quantity, new_unit)
+
+            save_data(session["username"], shop.to_dict(), "shoppinglist")
+            flash(f"Successfully modified item '{new_name}'", "success")
+
         except Exception as e:
             flash(str(e), "danger")
 
-        mod_id = request.form["id"]
-        new_name = request.form["name"]
-        new_quantity = float(request.form["quantity"])
-        new_unit = request.form["unit"]
-        shop_list.modify_item(mod_id, new_name, new_quantity, new_unit)
         return redirect("/shoppinglist")
     else:
         flash("Please log in to use PantryPal", "danger")
@@ -328,7 +338,11 @@ def modify_shoppinglist():
 def remove_shoppinglist():
     if session.get("username", None):
         try:
-            pass
+            shop = ShoppingList(session["username"])
+            shop.remove_item(request.form["id"])
+
+            save_data(session["username"], shop.to_dict(), "shoppinglist")
+            flash(f"Successfully removed item '{request.form['name']}'", "success")
         except Exception as e:
             flash(str(e), "danger")
 
@@ -342,17 +356,25 @@ def remove_shoppinglist():
 def purchase_shoppinglist():
     if session.get("username", None):
         try:
-            pass
+            id = request.form["id"]
+            name = request.form['name']
+            quantity = float(request.form['quantity'])
+            unit = request.form['unit']
+            exp_date = request.form['expiration_date']
+
+            inv = InventoryTracker(session["username"])
+            shop = ShoppingList(session["username"])
+
+            inv.add_entry(name, quantity, unit, exp_date)
+            shop.remove_item(id)
+
+            save_data(session["username"], inv.to_dict(), "inventory")
+            save_data(session["username"], shop.to_dict(), "shoppinglist")
+            flash(f"Successfully added item '{name}' to your pantry", "success")
+
         except Exception as e:
             flash(str(e), "danger")
 
-        pur_id = request.form["id"]
-        name = request.form['name']
-        quantity = float(request.form['quantity'])
-        unit = request.form['unit']
-        exp_date = request.form['expiration_date']
-        inv_tracker.add_entry(name, quantity, unit, exp_date)
-        shop_list.remove_item(pur_id)
         return redirect("/shoppinglist")
     else:
         flash("Please log in to use PantryPal", "danger")

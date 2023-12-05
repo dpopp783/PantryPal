@@ -14,9 +14,9 @@
                 "name": "Rice",
                 "id": 20444
             },
-            "quantity": 11.0,
+            "quantity": 16.0,
             "unit": "cup",
-            "expiration_date": "2023-12-04"
+            "expiration_date": "2023-12-30"
         },
         "19335": {
             "ingredient": {
@@ -38,15 +38,6 @@
         }
     },
     "shoppinglist": {
-        "20444": {
-            "ingredient": {
-                "name": "Rice",
-                "id": 20444
-            },
-            "quantity": 16,
-            "unit": "cup",
-            "expiration_date": ""
-        },
         "1009": {
             "ingredient": {
                 "name": "Cheddar",
@@ -54,6 +45,15 @@
             },
             "quantity": 24,
             "unit": "oz",
+            "expiration_date": ""
+        },
+        "1123": {
+            "ingredient": {
+                "name": "Egg",
+                "id": 1123
+            },
+            "quantity": 12.0,
+            "unit": "",
             "expiration_date": ""
         }
     }

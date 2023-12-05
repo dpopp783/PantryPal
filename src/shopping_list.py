@@ -28,10 +28,10 @@ class ShoppingList:
         self._add_item(newEntry)
 
     def remove_item(self, id: str):
-        self.shopping_list.pop(id)
+        self.shopping_list.pop(int(id))
 
     def modify_item(self, id: str, new_name: str, new_quantity: float, new_unit: str):
-        self.remove_item(id)
+        self.remove_item(int(id))
         self._add_item(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit))
 
     def to_dict(self):
