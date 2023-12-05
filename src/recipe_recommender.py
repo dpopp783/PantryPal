@@ -4,6 +4,7 @@ from inventory_entry import InventoryEntry, Ingredient
 from inventory_tracker import InventoryTracker
 from typing import List, Optional
 import json
+from util import check_status_code
 
 
 class Recipe:
@@ -22,10 +23,14 @@ class Recipe:
         usedIngredients = []
         missedIngredients = []
         for ingredient in self.ingredients:
+            # print(ingredient.unit)
             ing_dict = ingredient.to_dict()
             ing_dict.pop("expiration_date")
             if str(ingredient.ingredient.id) in inv_tracker.inventory.keys():
                 # TODO check if they have enough of the ingredient
+                # if not inv_tracker.have_enough(ingredient.ingredient.id, ingredient.quantity, ingredient.unit):
+                #     missedIngredients.append(ing_dict)
+                # else:
                 usedIngredients.append(ing_dict)
             else:
                 missedIngredients.append(ing_dict)
@@ -42,12 +47,15 @@ class RecipeRecommender:
     def __init__(self):
         self.recommendations = []
 
-    def get_recommendations(self, ingredients: str, num_recipes: int):
-        url = f"https://api.spoonacular.com/recipes/findByIngredients?apiKey={api_key}&ingredients={ingredients}&number={num_recipes}&ranking=2&ignorePantry=False"
+    def get_recommendations(self, inv_tracker: InventoryTracker, num_recipes: int):
+        ingredients = inv_tracker.__str__()
+        url = f"https://api.spoonacular.com/recipes/findByIngredients?apiKey={api_key}&ingredients={ingredients}&number={num_recipes}&ranking=2&ignorePantry=false&instructionsRequired=true"
         r = requests.get(url)
-        assert r.status_code == 200
+        check_status_code(r)
 
         self.recommendations = []
+
+        # TODO figure out how to get recipe instructions
 
         for j in r.json():
             id = j["id"]

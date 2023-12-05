@@ -5,6 +5,7 @@ import requests
 import json
 import csv
 from typing import Union
+from util import check_status_code
 
 
 class PantryPalIngredientIDMap(object):
@@ -22,16 +23,17 @@ class PantryPalIngredientIDMap(object):
     def get_id(self, name: str):
         # TODO store these 1k top ingredients in a DB instead of dict
         if name.lower().strip() in self.idMap.values():
-            print("NO REQ")
             return int(list(self.idMap.keys())[list(self.idMap.values()).index(name.lower().strip())])
         print("REQUESTED")
         url = f"https://api.spoonacular.com/food/ingredients/search/?apiKey={api_key}&query={name}&number=1"
         r = requests.get(url)
-        assert r.status_code == 200
-        # TODO error handling if there are no results
+
+        check_status_code(r)
+
+        results = r.json()['results']
+        if len(results) == 0:
+            raise Exception(f"Ingredient ({name}) not found by Spoonacular API")
         return int(r.json()['results'][0]['id'])
-
-
 
 @dataclass
 class Ingredient:
@@ -39,13 +41,12 @@ class Ingredient:
     id: int
 
 
-def convert(ingredient: str, source_amount: float, source_unit: str, target_unit: str):
+def convert(ingredient_name: str, source_amount: float, source_unit: str, target_unit: str):
 
-    url = f"https://api.spoonacular.com/recipes/convert?apiKey={api_key}&ingredientName={ingredient}&sourceAmount={source_amount}&sourceUnit={source_unit}&targetUnit={target_unit}"
+    url = f"https://api.spoonacular.com/recipes/convert?apiKey={api_key}&ingredientName={ingredient_name}&sourceAmount={source_amount}&sourceUnit={source_unit}&targetUnit={target_unit}"
+
     r = requests.get(url)
-
-    # TODO error handling
-    assert r.status_code == 200
+    check_status_code(r)
 
     return r.json()["targetAmount"]
 
