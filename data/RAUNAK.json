@@ -35,7 +35,8 @@
                 "id": 20444
             },
             "quantity": 16,
-            "unit": "cup"
+            "unit": "cup",
+            "expiration_date": ""
         },
         "1009": {
             "ingredient": {
@@ -43,7 +44,53 @@
                 "id": 1009
             },
             "quantity": 24,
-            "unit": "oz"
+            "unit": "oz",
+            "expiration_date": ""
+        },
+        "6008": {
+            "ingredient": {
+                "name": "beef broth",
+                "id": 6008
+            },
+            "quantity": 2,
+            "unit": "cups",
+            "expiration_date": ""
+        },
+        "10218": {
+            "ingredient": {
+                "name": "pork tenderloin",
+                "id": 10218
+            },
+            "quantity": 1,
+            "unit": "serving",
+            "expiration_date": ""
+        },
+        "1009354": {
+            "ingredient": {
+                "name": "apple r",
+                "id": 1009354
+            },
+            "quantity": 1,
+            "unit": "serving",
+            "expiration_date": ""
+        },
+        "10219335": {
+            "ingredient": {
+                "name": "cinnamon sugar",
+                "id": 10219335
+            },
+            "quantity": 1,
+            "unit": "serving",
+            "expiration_date": ""
+        },
+        "9003": {
+            "ingredient": {
+                "name": "apples",
+                "id": 9003
+            },
+            "quantity": 2,
+            "unit": "",
+            "expiration_date": ""
         }
     }
 }
