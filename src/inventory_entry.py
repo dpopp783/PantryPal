@@ -82,8 +82,8 @@ class InventoryEntry:
         if unit != self._unit:
             amount = convert(self._ingredient.name, amount, unit, self._unit)
 
-        # TODO error handling
-        assert self._quantity >= amount
+        if amount > self._quantity:
+            raise ValueError(f"Not enough quantity in InventoryEntry to deduct {amount} {unit}")
 
         self._quantity -= amount
 

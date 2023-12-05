@@ -45,7 +45,10 @@ class InventoryTracker:
 
     def deduct_ingredients(self, ids: List, quantities: List, units: List):
         for id, quantity, unit in zip(ids, quantities, units):
-            self.inventory[id].deduct(quantity, unit)
+            try:
+                self.inventory[id].deduct(quantity, unit)
+            except ValueError as e:
+                print(str(e))
 
     def jsonify(self):
         return json.dumps({ie.ingredient.id: ie.to_dict() for ie in self.inventory.values()})
