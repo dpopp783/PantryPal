@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-secondary">
+    <nav class="navbar navbar-expand-sm bg-secondary">
         <div class="container-fluid">
             <h1>PantryPal</h1>
             <div class="collapse navbar-collapse ps-2">
@@ -80,7 +80,12 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body" style="text-align: center;">
-                        <img id="recipe-image" src="">
+                        <div class="row">
+                            <img id="recipe-image" src="">
+                        </div>
+                        <div class="row">
+                            <a id="recipe-link">Instructions</a>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="use-recipe">Use</button>
@@ -92,7 +97,7 @@
 
     <footer>
         <script>
-            var recipes = JSON.parse('{{ recipes_JSON | safe }}')
+            var recipes = JSON.parse(`{{ recipes_JSON | safe }}`)
         </script>
 
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

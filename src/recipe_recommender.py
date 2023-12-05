@@ -20,6 +20,7 @@ class Recipe:
         data["id"] = self.id
         data["name"] = self.name
         data["image"] = self.image_url
+        data["link"] = self.get_url()
         usedIngredients = []
         missedIngredients = []
         for ingredient in self.ingredients:
@@ -40,6 +41,9 @@ class Recipe:
 
     def jsonify(self, inv_tracker: InventoryTracker):
         return json.dumps(self.to_dict(inv_tracker))
+    
+    def get_url(self,):
+        return "https://spoonacular.com/recipes/" + "-".join(self.name.lower().split(" ")) + "-" + str(self.id)
 
 
 class RecipeRecommender:
@@ -47,7 +51,7 @@ class RecipeRecommender:
     def __init__(self):
         self.recommendations = []
 
-    def get_recommendations(self, inv_tracker: InventoryTracker, num_recipes: int):
+    def get_recommendations(self, inv_tracker: InventoryTracker, num_recipes: int) -> list[Recipe]:
         ingredients = inv_tracker.__str__()
         url = f"https://api.spoonacular.com/recipes/findByIngredients?apiKey={api_key}&ingredients={ingredients}&number={num_recipes}&ranking=2&ignorePantry=false&instructionsRequired=true"
         r = requests.get(url)
@@ -56,7 +60,6 @@ class RecipeRecommender:
         self.recommendations = []
 
         # TODO figure out how to get recipe instructions
-
         for j in r.json():
             id = j["id"]
             name = j["title"]
@@ -71,7 +74,3 @@ class RecipeRecommender:
 
     def jsonify(self, inv_tracker: InventoryTracker):
         return json.dumps({rec.id: rec.to_dict(inv_tracker) for rec in self.recommendations})
-
-
-    def get_url(title: str, id: int):
-        return "https://spoonacular.com/recipes/" + {"-".join(title.lower().split(" "))} + "-" + str(id)

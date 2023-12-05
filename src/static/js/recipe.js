@@ -13,6 +13,7 @@ function view (event) {
 
         $("#recipe-name").html(recipe.name);
         $("#recipe-image").attr("src", recipe.image)
+        $("#recipe-link").attr("href", recipe.link)
     }
 }
 

@@ -51,9 +51,6 @@ app = Flask(__name__)
 app.secret_key = config.api_key # This just has to exist to use sessions
 
 
-
-
-
 @app.route("/", methods=["GET"])
 def index():
     return render_template("login.html")
@@ -101,6 +98,7 @@ def signup():
         session["username"] = username
         flash(f"Successfully created account '{username}'")
         return redirect("/dashboard")
+    
     except Exception as e:
         flash(str(e), "danger")
         return redirect("/")
@@ -110,15 +108,21 @@ def signup():
 def dashboard():
     if session.get("username", None):
         try:
-            pass
-        except Exception as e:
-            flash(str(e), "danger")
-
-        return render_template("dashboard.html", 
-            inventory = inv_tracker.inventory, 
-            shoppinglist = shop_list.shopping_list.values(),
-            recipe = recipe_recommender.recommendations,
+            inventory = InventoryTracker(session["username"])
+            shoppinglist = ShoppingList(session["username"])
+            recommender = RecipeRecommender()
+            recipe = recommender.get_recommendations(inventory, 1)[0]
+            return render_template("dashboard.html", 
+                user = session["username"],
+                inventory = inventory.to_dict(), 
+                shoppinglist = shoppinglist.to_dict(),
+                recipe = recipe.to_dict(inventory),
             )
+        
+        except Exception as e:
+            print(e)
+            flash(str(e), "danger")
+        
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
@@ -214,11 +218,15 @@ def ingredients_remove():
 def recipes():
     if session.get("username", None):
         try:
-            pass
+            inventory = InventoryTracker(session["username"])
+            recommender = RecipeRecommender()
+            recipes = recommender.get_recommendations(inventory, 20)
+            return render_template("recipes.html", recipes = recipes, recipes_JSON = recommender.jsonify(inventory))
+        
         except Exception as e:
             flash(str(e), "danger")
-        recipe_recommender.get_recommendations(inv_tracker, 2)
-        return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker))
+            return render_template("recipes.html", recipes = {}, recipes_JSON = {})
+        
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
@@ -232,25 +240,31 @@ def recipes_search():
         except Exception as e:
             flash(str(e), "danger")
 
-        return jsonify("{}")  # Return a JSON of results`
+        return jsonify("{}")  # Return a JSON of results
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
 
+
 @app.route("/recipes/buy-ingredients", methods=["POST"])
 def recipes_buy_ingredients():
     if session.get("username", None):
-        print("Adding ingredients to list")
-        print(request.get_json())
+        try:
+            recipe = request.get_json()
+            ingredients = recipe['missedIngredients']
+            shoppinglist = ShoppingList(session["username"])
 
-        recipe = request.get_json()
-        print(type(recipe))
-        ingredients = recipe['missedIngredients']
+            for ingredient in ingredients:
+                shoppinglist.add_item(ingredient["ingredient"]["name"], ingredient["quantity"], ingredient["unit"])
 
-        for ingredient in ingredients:
-            shop_list.add_item(ingredient["ingredient"]["name"], ingredient["quantity"], ingredient["unit"])
+            save_data(session["username"], shoppinglist.to_dict(), "shoppinglist")
+            flash(f"Added missing ingredients of '{recipe['name']}' to your Shopping List", "success")
+
+        except Exception as e:
+            flash(str(e), "danger")
 
         return redirect("/recipes")
+
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")

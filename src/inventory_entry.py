@@ -24,7 +24,6 @@ class PantryPalIngredientIDMap(object):
         # TODO store these 1k top ingredients in a DB instead of dict
         if name.lower().strip() in self.idMap.values():
             return int(list(self.idMap.keys())[list(self.idMap.values()).index(name.lower().strip())])
-        print("REQUESTED")
         url = f"https://api.spoonacular.com/food/ingredients/search/?apiKey={api_key}&query={name}&number=1"
         r = requests.get(url)
 
