@@ -216,8 +216,19 @@ def ingredients_modify():
             print(request.form)
             mod_id = request.form["id"]
             new_name = request.form["name"]
-            new_quantity = float(request.form["quantity"])
+            if not new_name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/ingredients")
+            new_quantity = request.form["quantity"]
+            if not new_quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/ingredients")
+            else:
+                quantity = float(new_quantity)
             new_unit = request.form["unit"]
+            if not new_unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/ingredients")
             if len(request.form['expiration_date']):
                 new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
             else:
