@@ -9,6 +9,7 @@ import datetime
 #import psycopg2
 #from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import csv
+from flask import flash
 
 # conn = psycopg2.connect(
 #     user='postgres',
@@ -77,7 +78,7 @@ recipe_recommender = RecipeRecommender()
 def index():
     global response
 
-    return render_template("login.html", response = response)
+    return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
@@ -98,7 +99,7 @@ def login():
 
         return redirect("/dashboard")
     except Exception as e:
-        print(e)
+        flash(str(e), 'error')
         return redirect("/")
     
 
@@ -123,7 +124,7 @@ def signup():
         session["username"] = username
         return redirect("/dashboard")
     except Exception as e:
-        print(e)
+        flash(str(e), 'error')
         return redirect("/")
 
 
@@ -131,11 +132,10 @@ def signup():
 def dashboard():
     global response
     try:
-        
-        response = "Success: "
+        response = "Success: " # flash(str(e), 'error')
     except Exception as e:
         
-        response = "Error: "
+        flash(str(e), 'error')
 
     return render_template("dashboard.html", 
         inventory = inv_tracker.inventory, 
@@ -153,7 +153,7 @@ def ingredients():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
     
     # cur.execute('SELECT * FROM inventory_entry')
     # entries = cur.fetchall()
@@ -176,7 +176,7 @@ def ingredients_add():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
 
     if request.method == "POST":
         name = request.form['name']
@@ -195,7 +195,7 @@ def ingredients_modify():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
 
     mod_id = request.form["id"]
     new_name = request.form["name"]
@@ -228,7 +228,7 @@ def recipes():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
     recipe_recommender.get_recommendations(inv_tracker, 2)
     return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker), response=response)
 
@@ -241,7 +241,7 @@ def recipes_search():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
 
     return jsonify("{}")  # Return a JSON of results
 
@@ -269,7 +269,7 @@ def shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
     
     return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
 
@@ -282,7 +282,7 @@ def add_shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
 
     if request.method == "POST":
         name = request.form['name']
@@ -300,7 +300,7 @@ def modify_shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = str(e)
+        flash(str(e), 'error')
 
     mod_id = request.form["id"]
     new_name = request.form["name"]
@@ -317,7 +317,7 @@ def remove_shoppinglist():
         
         response = "Success: "
     except Exception as e:
-        response = str(e)
+        flash(str(e), 'error')
 
     return redirect("/shoppinglist")
 
@@ -330,7 +330,7 @@ def purchase_shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        flash(str(e), 'error')
 
     pur_id = request.form["id"]
     # TODO request expiration date from user when you hit the purchase button

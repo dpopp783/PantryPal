@@ -14,10 +14,41 @@
             <h1>PantryPal</h1>
         </div>
     </nav>
-
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4" style="text-align: center;">
+            
+            <!-- {% if response %}
+            <div class="alert alert-danger" role="alert">
+                {{ response }}
+            </div>
+            {% endif %} -->
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+
+            
+        </div>
+        <div class="col-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col-4" style="text-align: center;">
+            {% with messages = get_flashed_messages(category_filter=["error"]) %}
+            {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
             <div class="card w-100 my-3">
                 <div class="card-header bg-info">
                     <h3 class="my-0">Please Log In:</h3>
