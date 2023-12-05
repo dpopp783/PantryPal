@@ -198,7 +198,7 @@ def ingredients_add():
             inv = InventoryTracker(session["username"])   
             inv.add_entry(name, quantity, unit, exp_date)
             save_data(session["username"], inv.to_dict(), "inventory")
-            flash(f"Successfully added entry '{name}'")
+            flash(f"Successfully added entry '{name}'", "success")
 
         except Exception as e:
             flash(str(e), "danger")
@@ -245,7 +245,7 @@ def ingredients_remove():
             inv = InventoryTracker(session["username"])
             inv.remove_entry(request.form["id"])
             save_data(session["username"], inv.to_dict(), "inventory")
-            flash(f"Successfully deleted entry '{request.form['name']}'")
+            flash(f"Successfully deleted entry '{request.form['name']}'", "success")
 
         except Exception as e:
             flash(str(e), "error")
