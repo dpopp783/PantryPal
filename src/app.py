@@ -9,7 +9,6 @@ import datetime
 #import psycopg2
 #from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import csv
-from flask import flash
 
 # conn = psycopg2.connect(
 #     user='postgres',
@@ -50,8 +49,6 @@ from flask import flash
 app = Flask(__name__)
 app.secret_key = "AAAA"
 
-response = ""
-
 # Setup test InventoryTracker object
 
 idMap = PantryPalIngredientIDMap()
@@ -76,14 +73,11 @@ recipe_recommender = RecipeRecommender()
 
 @app.route("/", methods=["GET"])
 def index():
-    global response
-
     return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login():
-    global response
     try:
         username = request.form["username"]
         password = request.form["password"]
@@ -97,15 +91,15 @@ def login():
             else:
                 session["username"] = username
 
+        flash(f"Logged in as '{username}'", "success")
         return redirect("/dashboard")
     except Exception as e:
-        flash(str(e), 'error')
+        flash(str(e), "danger")
         return redirect("/")
     
 
 @app.route("/signup", methods=["POST"])
 def signup():
-    global response
     try:
         username = request.form["username"]
         password = request.form["password"]
@@ -122,6 +116,7 @@ def signup():
             json.dump(accounts, f, indent=4)
         
         session["username"] = username
+        flash(f"Successfully created account '{username}'")
         return redirect("/dashboard")
     except Exception as e:
         flash(str(e), 'error')
@@ -130,29 +125,23 @@ def signup():
 
 @app.route("/dashboard", methods=["GET"])
 def dashboard():
-    global response
     try:
-        response = "Success: " # flash(str(e), 'error')
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
 
     return render_template("dashboard.html", 
         inventory = inv_tracker.inventory, 
         shoppinglist = shop_list.shopping_list.values(),
         recipe = recipe_recommender.recommendations,
-        response = response
         )
 
 
 @app.route("/ingredients", methods=["GET"])
 def ingredients():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
     
     # cur.execute('SELECT * FROM inventory_entry')
@@ -165,15 +154,13 @@ def ingredients():
     #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
 
     # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
-    return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify(), response=response)
+    return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
 
 
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
         
         flash(str(e), 'error')
@@ -189,12 +176,9 @@ def ingredients_add():
 
 @app.route("/ingredients/modify", methods=["POST"])
 def ingredients_modify():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
 
     mod_id = request.form["id"]
@@ -211,36 +195,28 @@ def ingredients_modify():
 
 @app.route("/ingredients/remove", methods=["POST"])
 def ingredients_remove():
-    global response
     try:
         inv_tracker.remove_entry(request.form["id"])
-        response = f"Success: Removed '{request.form['name']}'."
     except Exception as e:
-        response = f"Error: Ingredient '{request.form['name']}' not found in database."
+        flash(str(e), "error")
     return redirect("/ingredients")
 
 
 @app.route("/recipes", methods=["GET"])
 def recipes():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
     recipe_recommender.get_recommendations(inv_tracker, 2)
-    return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker), response=response)
+    return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker))
 
 
 @app.route("/recipes/search", methods=["POST"])
 def recipes_search():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
 
     return jsonify("{}")  # Return a JSON of results
@@ -263,25 +239,18 @@ def recipes_buy_ingredients():
 
 @app.route("/shoppinglist", methods=["GET"])
 def shoppinglist():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
-    
     return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
 
 
 @app.route("/shoppinglist/add", methods=["POST"])
 def add_shoppinglist():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
 
     if request.method == "POST":
@@ -294,12 +263,9 @@ def add_shoppinglist():
 
 @app.route("/shoppinglist/modify", methods=["POST"])
 def modify_shoppinglist():
-    global response
-    try:
-        
-        response = "Success: "
+    try:  
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
 
     mod_id = request.form["id"]
@@ -312,10 +278,8 @@ def modify_shoppinglist():
 
 @app.route("/shoppinglist/remove", methods=["POST"])
 def remove_shoppinglist():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
         flash(str(e), 'error')
 
@@ -324,16 +288,12 @@ def remove_shoppinglist():
 
 @app.route("/shoppinglist/purchase", methods=["POST"])
 def purchase_shoppinglist():
-    global response
     try:
-        
-        response = "Success: "
+        pass
     except Exception as e:
-        
         flash(str(e), 'error')
 
     pur_id = request.form["id"]
-    # TODO request expiration date from user when you hit the purchase button
     name = request.form['name']
     quantity = float(request.form['quantity'])
     unit = request.form['unit']
