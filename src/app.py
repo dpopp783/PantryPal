@@ -71,12 +71,13 @@ recipe_recommender = RecipeRecommender()
 
 @app.route("/", methods=["GET"])
 def index():
-    global response
-    try:
-        pass
-    except Exception as e:
-        pass
-    return render_template("login.html", response = response)
+    # global response
+    # try:
+    #     pass
+    # except Exception as e:
+    #     pass
+    # return render_template("login.html", response = response)
+    return redirect("/dashboard")
 
 
 @app.route("/login", methods=["POST"])
@@ -215,7 +216,6 @@ def recipes_search():
         response = "Error: "
 
     return jsonify("{}")  # Return a JSON of results
-
 
 
 @app.route("/shoppinglist", methods=["GET"])
