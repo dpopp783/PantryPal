@@ -470,6 +470,9 @@ def purchase_shoppinglist():
             quantity = float(request.form['quantity'])
             unit = request.form['unit']
             exp_date = request.form['expiration_date']
+            if not exp_date:
+                flash("Please enter an expiration date for the ingredient.", "danger")
+                return redirect("/shoppinglist")
 
             inv = InventoryTracker(session["username"])
             shop = ShoppingList(session["username"])
