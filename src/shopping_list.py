@@ -23,5 +23,8 @@ class ShoppingList:
         self.remove_item(id)
         self._add_item(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit))
 
+    def to_dict(self):
+        return {ie.ingredient.id: ie.to_dict() for ie in self.shopping_list.values()}
+
     def jsonify(self):
         return json.dumps({ie.ingredient.id: ie.to_dict() for ie in self.shopping_list.values()})

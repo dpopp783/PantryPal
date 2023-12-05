@@ -7,7 +7,7 @@ import datetime
 
 class InventoryTracker:
 
-    def __init__(self):
+    def __init__(self, username: str):
         self.inventory: Dict[str, InventoryEntry] = dict()
     
     def __str__(self):
