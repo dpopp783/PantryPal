@@ -17,3 +17,4 @@ function login () {
     form.attr("action", "/login");
     form.submit();
 }
+
