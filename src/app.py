@@ -152,168 +152,215 @@ def dashboard():
 
 @app.route("/ingredients", methods=["GET"])
 def ingredients():
-    try:
-        inventory = InventoryTracker(session["username"])
-    except Exception as e:
-        flash(str(e), 'error')
-    
-    # cur.execute('SELECT * FROM inventory_entry')
-    # entries = cur.fetchall()
+    if session.get("username", None):
+        try:
+            inventory = InventoryTracker(session["username"])
+        except Exception as e:
+            flash(str(e), 'error')
+        
+        # cur.execute('SELECT * FROM inventory_entry')
+        # entries = cur.fetchall()
 
-    inventory = []
-    # for id, ing_id, amount, unit, date in entries:
-    #     cur.execute(f'SELECT name FROM ingredient WHERE id={ing_id}')
-    #     ing_name = cur.fetchall()[0][0]
-    #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
+        inventory = []
+        # for id, ing_id, amount, unit, date in entries:
+        #     cur.execute(f'SELECT name FROM ingredient WHERE id={ing_id}')
+        #     ing_name = cur.fetchall()[0][0]
+        #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
 
-    # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
-    return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
+        # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
+        return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/ingredients/add", methods=["POST"])
 def ingredients_add():
-    try:
-        pass
-    except Exception as e:
-        
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            
+            flash(str(e), 'error')
 
-    if request.method == "POST":
-        name = request.form['name']
-        quantity = float(request.form['quantity'])
-        unit = request.form['unit']
-        exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
-        inv_tracker.add_entry(name, quantity, unit, exp_date)
-    return redirect("/ingredients")
+        if request.method == "POST":
+            name = request.form['name']
+            quantity = float(request.form['quantity'])
+            unit = request.form['unit']
+            exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+            inv_tracker.add_entry(name, quantity, unit, exp_date)
+        return redirect("/ingredients")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/ingredients/modify", methods=["POST"])
 def ingredients_modify():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
 
-    mod_id = request.form["id"]
-    new_name = request.form["name"]
-    new_quantity = float(request.form["quantity"])
-    new_unit = request.form["unit"]
-    if len(request.form['expiration_date']):
-        new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+        mod_id = request.form["id"]
+        new_name = request.form["name"]
+        new_quantity = float(request.form["quantity"])
+        new_unit = request.form["unit"]
+        if len(request.form['expiration_date']):
+            new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+        else:
+            new_exp_date = None
+        inv_tracker.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
+        return redirect("/ingredients")
     else:
-        new_exp_date = None
-    inv_tracker.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
-    return redirect("/ingredients")
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/ingredients/remove", methods=["POST"])
 def ingredients_remove():
-    try:
-        inv_tracker.remove_entry(request.form["id"])
-    except Exception as e:
-        flash(str(e), "error")
-    return redirect("/ingredients")
+    if session.get("username", None):
+        try:
+            inv_tracker.remove_entry(request.form["id"])
+        except Exception as e:
+            flash(str(e), "error")
+        return redirect("/ingredients")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/recipes", methods=["GET"])
 def recipes():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
-    recipe_recommender.get_recommendations(inv_tracker, 2)
-    return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker))
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
+        recipe_recommender.get_recommendations(inv_tracker, 2)
+        return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker))
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/recipes/search", methods=["POST"])
 def recipes_search():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
 
-    return jsonify("{}")  # Return a JSON of results
+        return jsonify("{}")  # Return a JSON of results`
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 @app.route("/recipes/buy-ingredients", methods=["POST"])
 def recipes_buy_ingredients():
+    if session.get("username", None):
+        print("Adding ingredients to list")
+        print(request.get_json())
 
-    print("Adding ingredients to list")
-    print(request.get_json())
+        recipe = request.get_json()
+        print(type(recipe))
+        ingredients = recipe['missedIngredients']
 
-    recipe = request.get_json()
-    print(type(recipe))
-    ingredients = recipe['missedIngredients']
+        for ingredient in ingredients:
+            shop_list.add_item(ingredient["ingredient"]["name"], ingredient["quantity"], ingredient["unit"])
 
-    for ingredient in ingredients:
-        shop_list.add_item(ingredient["ingredient"]["name"], ingredient["quantity"], ingredient["unit"])
-
-    return redirect("/recipes")
+        return redirect("/recipes")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/shoppinglist", methods=["GET"])
 def shoppinglist():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
-    return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
+        return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/shoppinglist/add", methods=["POST"])
 def add_shoppinglist():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
 
-    if request.method == "POST":
-        name = request.form['name']
-        quantity = float(request.form['quantity'])
-        unit = request.form['unit']
-        shop_list.add_item(name, quantity, unit)
-    return redirect("/shoppinglist")
+        if request.method == "POST":
+            name = request.form['name']
+            quantity = float(request.form['quantity'])
+            unit = request.form['unit']
+            shop_list.add_item(name, quantity, unit)
+        return redirect("/shoppinglist")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/shoppinglist/modify", methods=["POST"])
 def modify_shoppinglist():
-    try:  
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:  
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
 
-    mod_id = request.form["id"]
-    new_name = request.form["name"]
-    new_quantity = float(request.form["quantity"])
-    new_unit = request.form["unit"]
-    shop_list.modify_item(mod_id, new_name, new_quantity, new_unit)
-    return redirect("/shoppinglist")
+        mod_id = request.form["id"]
+        new_name = request.form["name"]
+        new_quantity = float(request.form["quantity"])
+        new_unit = request.form["unit"]
+        shop_list.modify_item(mod_id, new_name, new_quantity, new_unit)
+        return redirect("/shoppinglist")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/shoppinglist/remove", methods=["POST"])
 def remove_shoppinglist():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
 
-    return redirect("/shoppinglist")
+        return redirect("/shoppinglist")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 @app.route("/shoppinglist/purchase", methods=["POST"])
 def purchase_shoppinglist():
-    try:
-        pass
-    except Exception as e:
-        flash(str(e), 'error')
+    if session.get("username", None):
+        try:
+            pass
+        except Exception as e:
+            flash(str(e), 'error')
 
-    pur_id = request.form["id"]
-    name = request.form['name']
-    quantity = float(request.form['quantity'])
-    unit = request.form['unit']
-    exp_date = request.form['expiration_date']
-    inv_tracker.add_entry(name, quantity, unit, exp_date)
-    shop_list.remove_item(pur_id)
-    return redirect("/shoppinglist")
+        pur_id = request.form["id"]
+        name = request.form['name']
+        quantity = float(request.form['quantity'])
+        unit = request.form['unit']
+        exp_date = request.form['expiration_date']
+        inv_tracker.add_entry(name, quantity, unit, exp_date)
+        shop_list.remove_item(pur_id)
+        return redirect("/shoppinglist")
+    else:
+        flash("Please log in to use PantryPal", "danger")
+        return redirect("/")
 
 
 app.run(debug = True)
