@@ -1,20 +1,34 @@
 
 $(document).ready( () => {
     $("#view-popup").on("show.bs.modal", view);
+    $("#use-recipe").on("click", use);
     $(".shop").on("click", buy_ingredients);
 })
 
 function view (event) {
     let id = Number($(event.relatedTarget).data("id"));
-    console.log(id)
     if (id) {
         let recipe = recipes[id];
-        console.log(recipe)
 
+        $("#use-recipe").attr("data-id", recipe.id);
         $("#recipe-name").html(recipe.name);
-        $("#recipe-image").attr("src", recipe.image)
+        $("#recipe-image").attr("src", recipe.image);
         $("#recipe-link").attr("href", recipe.link)
-    }
+    };
+}
+
+function use () {
+    let id = Number($(this).data("id"));
+    let recipe = recipes[id];
+    $('#view-popup').modal('hide');
+    fetch("/recipes/make-recipe", {
+        method: "POST",
+        body: JSON.stringify(recipe),
+        headers: {
+            "Content-type": "application/json"
+        }
+    });
+    
 }
 
 function buy_ingredients () {

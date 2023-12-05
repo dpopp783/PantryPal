@@ -263,7 +263,6 @@ def recipes():
             inventory = InventoryTracker(session["username"])
             recommender = RecipeRecommender()
             recipes = recommender.get_recommendations(inventory, 20)
-            print([recipe.to_dict(inv_tracker=inventory) for recipe in recipes])
             return render_template("recipes.html", recipes = [r.to_dict(inventory) for r in recipes], recipes_JSON = recommender.jsonify(inventory))
         
         except Exception as e:
@@ -321,7 +320,7 @@ def recipes_make_recipe():
         name = recipe['name']
 
         if len(missedIngredients) > 0:
-            flash(f"Cannot make {name}, you are missing {missedIngredients} ingredients", "danger")
+            raise Exception(f"Cannot make '{name}', you are missing {len(missedIngredients)} ingredients")
         else:
             inv_tracker = InventoryTracker(session["username"])
 
@@ -337,7 +336,7 @@ def recipes_make_recipe():
             inv_tracker.deduct_ingredients(ids, quantities, units)
 
             save_data(session["username"], inv_tracker.to_dict(), "inventory")
-            flash(f"You are making {name}, the used ingredients have been deducted from your inventory", "success")
+            flash(f"You are making '{name}', the used ingredients have been deducted from your inventory", "success")
 
     except Exception as e:
         flash(str(e), "danger")
