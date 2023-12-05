@@ -1,14 +1,5 @@
 {
     "inventory": {
-        "19335": {
-            "ingredient": {
-                "name": "Sugar",
-                "id": 19335
-            },
-            "quantity": 8.0,
-            "unit": "cup",
-            "expiration_date": "2024-05-23"
-        },
         "9003": {
             "ingredient": {
                 "name": "Apple",
@@ -26,6 +17,24 @@
             "quantity": 11.0,
             "unit": "cup",
             "expiration_date": "2023-12-04"
+        },
+        "19335": {
+            "ingredient": {
+                "name": "Sugar",
+                "id": 19335
+            },
+            "quantity": 10.0,
+            "unit": "cup",
+            "expiration_date": "2024-05-23"
+        },
+        "20081": {
+            "ingredient": {
+                "name": "Flour",
+                "id": 20081
+            },
+            "quantity": 5.0,
+            "unit": "cup",
+            "expiration_date": "2023-12-20"
         }
     },
     "shoppinglist": {

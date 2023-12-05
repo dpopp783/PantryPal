@@ -102,7 +102,7 @@ def signup():
         flash(f"Successfully created account '{username}'")
         return redirect("/dashboard")
     except Exception as e:
-        flash(str(e), 'error')
+        flash(str(e), "danger")
         return redirect("/")
 
 
@@ -112,7 +112,7 @@ def dashboard():
         try:
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         return render_template("dashboard.html", 
             inventory = inv_tracker.inventory, 
@@ -132,7 +132,7 @@ def ingredients():
             return render_template("ingredients.html", inventory=inv.inventory, inventory_JSON=inv.jsonify())
         
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
             return render_template("ingredients.html", inventory={}, inventory_JSON={})
         
     else:
@@ -155,7 +155,7 @@ def ingredients_add():
             flash(f"Successfully added entry '{name}'")
 
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         return redirect("/ingredients")
     else:
@@ -184,7 +184,7 @@ def ingredients_modify():
 
         except Exception as e:
             print(e)
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         return redirect("/ingredients")
     else:
@@ -216,7 +216,7 @@ def recipes():
         try:
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
         recipe_recommender.get_recommendations(inv_tracker, 2)
         return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker))
     else:
@@ -230,7 +230,7 @@ def recipes_search():
         try:
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         return jsonify("{}")  # Return a JSON of results`
     else:
@@ -261,10 +261,11 @@ def shoppinglist():
     if session.get("username", None):
         try:
             shop = ShoppingList(session["username"])
-            return render_template("shoppinglist.html", shoppinglist=shop.shopping_list, shoppinglist_JSON=shop.jsonify())
+            return render_template("shoppinglist.html", shoppinglist=shop.to_dict(), shoppinglist_JSON=shop.jsonify())
+        
         except Exception as e:
-            flash(str(e), 'error')
-        return render_template("shoppinglist.html", shoppinglist={}, shoppinglist_JSON={}})
+            flash(str(e), "danger")
+        return render_template("shoppinglist.html", shoppinglist={}, shoppinglist_JSON={})
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
@@ -276,7 +277,7 @@ def add_shoppinglist():
         try:
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         if request.method == "POST":
             name = request.form['name']
@@ -295,7 +296,7 @@ def modify_shoppinglist():
         try:  
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         mod_id = request.form["id"]
         new_name = request.form["name"]
@@ -314,7 +315,7 @@ def remove_shoppinglist():
         try:
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         return redirect("/shoppinglist")
     else:
@@ -328,7 +329,7 @@ def purchase_shoppinglist():
         try:
             pass
         except Exception as e:
-            flash(str(e), 'error')
+            flash(str(e), "danger")
 
         pur_id = request.form["id"]
         name = request.form['name']

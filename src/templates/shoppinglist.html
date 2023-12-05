@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="card-body pt-1" id="shoppinglist">
-                            {% for item in shoppinglist %}
+                            {% for item in shoppinglist.values() %}
                                 <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{item.ingredient.id}}" name="{{item.ingredient.name}}" style="align-items: center;">
                                     <div class="col-5">{{item.ingredient.name|title}}</div>
                                     <div class="col-5">{{item.quantity}} {{item.unit}}</div>

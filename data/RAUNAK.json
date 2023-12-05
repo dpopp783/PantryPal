@@ -35,8 +35,7 @@
                 "id": 20444
             },
             "quantity": 16,
-            "unit": "cup",
-            "expiration_date": ""
+            "unit": "cup"
         },
         "1009": {
             "ingredient": {
@@ -44,8 +43,7 @@
                 "id": 1009
             },
             "quantity": 24,
-            "unit": "oz",
-            "expiration_date": ""
+            "unit": "oz"
         }
     }
 }
