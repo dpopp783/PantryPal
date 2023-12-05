@@ -245,11 +245,13 @@ def recipes_buy_ingredients():
 def shoppinglist():
     if session.get("username", None):
         try:
+            
             shop = ShoppingList(session["username"])
             return render_template("shoppinglist.html", shoppinglist=shop.shopping_list, shoppinglist_JSON=shop.jsonify())
+
         except Exception as e:
             flash(str(e), 'error')
-        return render_template("shoppinglist.html", shoppinglist={}, shoppinglist_JSON={}})
+            return render_template("shoppinglist.html", shoppinglist={}, shoppinglist_JSON={})
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")

@@ -16,8 +16,7 @@ class ShoppingList:
             self.shopping_list[item["ingredient"]["id"]] = InventoryEntry(
                 Ingredient(item["ingredient"]["name"], item["ingredient"]["id"]),
                 item["quantity"],
-                item["unit"],
-                item["expiration_date"]
+                item["unit"]
             )
 
     def _add_item(self, item: InventoryEntry):
