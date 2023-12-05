@@ -170,9 +170,30 @@ def ingredients_add():
     if session.get("username", None):
         try:
             name = request.form['name']
-            quantity = float(request.form['quantity'])
+
+            if not name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/ingredients")
+
+            quantity = request.form['quantity']
+            if not quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/ingredients")
+            else:
+                quantity = float(quantity)
             unit = request.form['unit']
-            exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+
+            if not unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/ingredients")
+
+            exp_date = request.form['expiration_date']
+            if not exp_date:
+                flash("Please enter an expiration date for the ingredient.", "danger")
+                return redirect("/ingredients")
+            else:
+                exp_date = datetime.datetime.strptime(exp_date, '%Y-%m-%d').date()
+
 
             inv = InventoryTracker(session["username"])   
             inv.add_entry(name, quantity, unit, exp_date)
