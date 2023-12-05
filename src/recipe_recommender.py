@@ -70,6 +70,9 @@ class RecipeRecommender:
             for ing in j["usedIngredients"]:
                 ingredients.append(InventoryEntry(Ingredient(ing["name"], ing["id"]), ing["amount"], ing["unit"]))
             self.recommendations.append(Recipe(id, name, ingredients, image_url))
+
+        if len(self.recommendations) == 0:
+            raise Exception("Cannot find recommended recipes")
         return self.recommendations
 
     def jsonify(self, inv_tracker: InventoryTracker):

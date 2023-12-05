@@ -54,7 +54,7 @@
                             {% for recipe in recipes %}
                                 <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{recipe.id}}" name="{{recipe.name}}" style="align-items: center;">
                                     <div class="col-5">{{recipe.name|title}}</div>
-                                    <div class="col-5">{{"%d" % (recipe.usedIngredients|length + recipe.missedIngredients|length) }}</div>
+                                    <div class="col-5">{{recipe.usedIngredients|length + recipe.missedIngredients|length}}</div>
                                     <div class="col-2">
                                         <div class="btn-group">
                                             <button class="btn btn-success border-0" title="View Recipe" name="view" data-bs-toggle="modal" data-bs-target="#view-popup" data-id="{{recipe.id}}">

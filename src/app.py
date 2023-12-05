@@ -83,6 +83,10 @@ def signup():
     try:
         username = request.form["username"]
         password = request.form["password"]
+
+        if " " in username:
+            raise ValueError("Username cannot contain spaces")
+
         with open("accounts.json", "r") as f:
             accounts: dict = json.load(f)
             if accounts.get(username, None):
@@ -94,9 +98,12 @@ def signup():
 
         with open("accounts.json", "w") as f:
             json.dump(accounts, f, indent=4)
+
+        with open(f"data/{username}.json", "w") as f:
+            json.dump({"inventory":dict(), "shoppinglist": dict()}, f, indent=4)
         
         session["username"] = username
-        flash(f"Successfully created account '{username}'")
+        flash(f"Successfully created account '{username}'", "success")
         return redirect("/dashboard")
     
     except Exception as e:
@@ -120,8 +127,13 @@ def dashboard():
             )
         
         except Exception as e:
-            print(e)
             flash(str(e), "danger")
+            return render_template("dashboard.html", 
+                user = session["username"],
+                inventory = dict(), 
+                shoppinglist = dict(),
+                recipe = None,
+            )
         
     else:
         flash("Please log in to use PantryPal", "danger")
@@ -221,7 +233,8 @@ def recipes():
             inventory = InventoryTracker(session["username"])
             recommender = RecipeRecommender()
             recipes = recommender.get_recommendations(inventory, 20)
-            return render_template("recipes.html", recipes = recipes, recipes_JSON = recommender.jsonify(inventory))
+            print([recipe.to_dict(inv_tracker=inventory) for recipe in recipes])
+            return render_template("recipes.html", recipes = [r.to_dict(inventory) for r in recipes], recipes_JSON = recommender.jsonify(inventory))
         
         except Exception as e:
             flash(str(e), "danger")
