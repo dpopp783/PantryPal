@@ -45,7 +45,7 @@
                         <div class="card-body pt-1" id="recipeList">
                             {% for recipe in recipes %}
                                 <div class="item row py-1 pe-1 border-top border-dark-subtle bg-opacity-25" id="{{recipe.id}}" name="{{recipe.name}}" style="align-items: center;">
-                                    <div class="col-5">{{recipe.name}}</div>
+                                    <div class="col-5">{{recipe.name|title}}</div>
                                     <div class="col-5">{{"%d" % (recipe.usedIngredients|length + recipe.missedIngredients|length) }}</div>
                                     <div class="col-2">
                                         <div class="btn-group">
