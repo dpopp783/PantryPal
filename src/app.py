@@ -130,9 +130,11 @@ def ingredients():
         try:
             inv = InventoryTracker(session["username"])
             return render_template("ingredients.html", inventory=inv.inventory, inventory_JSON=inv.jsonify())
+        
         except Exception as e:
             flash(str(e), 'error')
             return render_template("ingredients.html", inventory={}, inventory_JSON={})
+        
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
@@ -149,9 +151,11 @@ def ingredients_add():
 
             inv = InventoryTracker(session["username"])   
             inv.add_entry(name, quantity, unit, exp_date)
+            save_data(session["username"], inv.to_dict(), "inventory")
+            flash(f"Successfully added entry '{name}'")
+
         except Exception as e:
             flash(str(e), 'error')
-
 
         return redirect("/ingredients")
     else:
@@ -163,19 +167,25 @@ def ingredients_add():
 def ingredients_modify():
     if session.get("username", None):
         try:
-            pass
+            print(request.form)
+            mod_id = request.form["id"]
+            new_name = request.form["name"]
+            new_quantity = float(request.form["quantity"])
+            new_unit = request.form["unit"]
+            if len(request.form['expiration_date']):
+                new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
+            else:
+                new_exp_date = None
+
+            inv = InventoryTracker(session["username"])
+            inv.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
+            save_data(session["username"], inv.to_dict(), "inventory")
+            flash(f"Successfully updated entry '{new_name}'", "success")
+
         except Exception as e:
+            print(e)
             flash(str(e), 'error')
 
-        mod_id = request.form["id"]
-        new_name = request.form["name"]
-        new_quantity = float(request.form["quantity"])
-        new_unit = request.form["unit"]
-        if len(request.form['expiration_date']):
-            new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
-        else:
-            new_exp_date = None
-        inv_tracker.modify_entry(mod_id, new_name, new_quantity, new_unit, new_exp_date)
         return redirect("/ingredients")
     else:
         flash("Please log in to use PantryPal", "danger")
@@ -186,9 +196,14 @@ def ingredients_modify():
 def ingredients_remove():
     if session.get("username", None):
         try:
-            inv_tracker.remove_entry(request.form["id"])
+            inv = InventoryTracker(session["username"])
+            inv.remove_entry(request.form["id"])
+            save_data(session["username"], inv.to_dict(), "inventory")
+            flash(f"Successfully deleted entry '{request.form['name']}'")
+
         except Exception as e:
             flash(str(e), "error")
+
         return redirect("/ingredients")
     else:
         flash("Please log in to use PantryPal", "danger")

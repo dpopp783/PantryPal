@@ -25,7 +25,7 @@ class InventoryTracker:
         return ",".join(map(lambda i: i.ingredient.name, self.inventory.values()))
 
     def _add_entry(self, ie: InventoryEntry):
-        self.inventory[str(ie.ingredient.id)] = ie
+        self.inventory[int(ie.ingredient.id)] = ie
 
     def add_entry(self, name: str, quantity: float, unit: str, exp_date: datetime.date):
         idMap = PantryPalIngredientIDMap()
@@ -37,10 +37,10 @@ class InventoryTracker:
             self.inventory[str(ing_id)].add(quantity, unit)
 
     def remove_entry(self, id: str):
-        self.inventory.pop(id)
+        self.inventory.pop(int(id))
 
     def get_entry(self, id: str):
-        return self.inventory.get(id)
+        return self.inventory.get(int(id))
 
     def have_enough(self, id: int, needed_quantity: float, needed_unit: str):
         entry = self.get_entry(str(id))
@@ -51,7 +51,7 @@ class InventoryTracker:
         return entry.quantity >= needed_quantity
 
     def modify_entry(self, id: str, new_name: str, new_quantity: float, new_unit: str, new_exp_date: datetime.date):
-        self.remove_entry(id)
+        self.remove_entry(int(id))
         self._add_entry(InventoryEntry(Ingredient(new_name, int(id)), new_quantity, new_unit, new_exp_date))
 
     def deduct_ingredients(self, ids: List, quantities: List, units: List):

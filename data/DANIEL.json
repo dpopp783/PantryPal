@@ -1,14 +1,5 @@
 {
     "inventory": {
-        "20081": {
-            "ingredient": {
-                "name": "Flour",
-                "id": 20081
-            },
-            "quantity": 10.0,
-            "unit": "cup",
-            "expiration_date": "2024-09-04"
-        },
         "19335": {
             "ingredient": {
                 "name": "Sugar",
@@ -26,6 +17,15 @@
             "quantity": 6.0,
             "unit": "large",
             "expiration_date": "2023-11-18"
+        },
+        "20444": {
+            "ingredient": {
+                "name": "Rice",
+                "id": 20444
+            },
+            "quantity": 11.0,
+            "unit": "cup",
+            "expiration_date": "2023-12-04"
         }
     },
     "shoppinglist": {
