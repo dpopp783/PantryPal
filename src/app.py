@@ -282,6 +282,39 @@ def recipes_buy_ingredients():
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
 
+@app.route("/recipes/make-recipe", methods=["POST"])
+def recipes_make_recipe():
+    try:
+        recipe = request.get_json()
+        usedIngredients = recipe['usedIngredients']
+        missedIngredients = recipe['missedIngredients']
+        name = recipe['name']
+
+        if len(missedIngredients) > 0:
+            flash(f"Cannot make {name}, you are missing {missedIngredients} ingredients", "danger")
+        else:
+            inv_tracker = InventoryTracker(session["username"])
+
+            ids = []
+            quantities = []
+            units = []
+
+            for ingredient in usedIngredients:
+                ids.append(ingredient["ingredient"]["id"])
+                quantities.append(float(ingredient["quantity"]))
+                units.append(ingredient["unit"])
+
+            inv_tracker.deduct_ingredients(ids, quantities, units)
+
+            save_data(session["username"], inv_tracker.to_dict(), "inventory")
+            flash(f"You are making {name}, the used ingredients have been deducted from your inventory", "success")
+
+    except Exception as e:
+        flash(str(e), "danger")
+
+    return redirect("/recipes")
+
+
 
 @app.route("/shoppinglist", methods=["GET"])
 def shoppinglist():
