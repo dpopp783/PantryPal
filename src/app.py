@@ -260,6 +260,7 @@ def recipes_buy_ingredients():
 def shoppinglist():
     if session.get("username", None):
         try:
+            
             shop = ShoppingList(session["username"])
             return render_template("shoppinglist.html", shoppinglist=shop.to_dict(), shoppinglist_JSON=shop.jsonify())
         
