@@ -2,12 +2,12 @@
     "inventory": {
         "9003": {
             "ingredient": {
-                "name": "Apple",
+                "name": "apples",
                 "id": 9003
             },
-            "quantity": 6.0,
-            "unit": "large",
-            "expiration_date": "2023-11-18"
+            "quantity": 3.0,
+            "unit": "",
+            "expiration_date": "2024-01-06"
         },
         "20444": {
             "ingredient": {
@@ -20,21 +20,57 @@
         },
         "19335": {
             "ingredient": {
-                "name": "Sugar",
+                "name": "sugar",
                 "id": 19335
             },
-            "quantity": 10.0,
+            "quantity": 0.5,
             "unit": "cup",
-            "expiration_date": "2024-05-23"
+            "expiration_date": "2023-12-30"
         },
         "20081": {
             "ingredient": {
-                "name": "Flour",
+                "name": "flour",
                 "id": 20081
             },
-            "quantity": 5.0,
+            "quantity": 1.0,
             "unit": "cup",
-            "expiration_date": "2023-12-20"
+            "expiration_date": "2023-12-30"
+        },
+        "2011": {
+            "ingredient": {
+                "name": "ground cloves",
+                "id": 2011
+            },
+            "quantity": 1.0,
+            "unit": "Dash",
+            "expiration_date": "2023-12-23"
+        },
+        "9156": {
+            "ingredient": {
+                "name": "lemon zest",
+                "id": 9156
+            },
+            "quantity": 1.0,
+            "unit": "",
+            "expiration_date": "2024-01-05"
+        },
+        "19334": {
+            "ingredient": {
+                "name": "brown sugar",
+                "id": 19334
+            },
+            "quantity": 0.5,
+            "unit": "cup",
+            "expiration_date": "2023-12-30"
+        },
+        "1001": {
+            "ingredient": {
+                "name": "butter",
+                "id": 1001
+            },
+            "quantity": 0.75,
+            "unit": "stick",
+            "expiration_date": "2023-12-23"
         }
     },
     "shoppinglist": {
@@ -54,6 +90,69 @@
             },
             "quantity": 12.0,
             "unit": "",
+            "expiration_date": ""
+        },
+        "2011": {
+            "ingredient": {
+                "name": "ground cloves",
+                "id": 2011
+            },
+            "quantity": 1,
+            "unit": "Dash",
+            "expiration_date": ""
+        },
+        "9003": {
+            "ingredient": {
+                "name": "apples",
+                "id": 9003
+            },
+            "quantity": 3,
+            "unit": "",
+            "expiration_date": ""
+        },
+        "19334": {
+            "ingredient": {
+                "name": "brown sugar",
+                "id": 19334
+            },
+            "quantity": 0.5,
+            "unit": "cup",
+            "expiration_date": ""
+        },
+        "1001": {
+            "ingredient": {
+                "name": "butter",
+                "id": 1001
+            },
+            "quantity": 0.75,
+            "unit": "stick",
+            "expiration_date": ""
+        },
+        "20081": {
+            "ingredient": {
+                "name": "flour",
+                "id": 20081
+            },
+            "quantity": 1,
+            "unit": "cup",
+            "expiration_date": ""
+        },
+        "9156": {
+            "ingredient": {
+                "name": "lemon zest",
+                "id": 9156
+            },
+            "quantity": 1,
+            "unit": "",
+            "expiration_date": ""
+        },
+        "19335": {
+            "ingredient": {
+                "name": "sugar",
+                "id": 19335
+            },
+            "quantity": 0.5,
+            "unit": "cup",
             "expiration_date": ""
         }
     }
