@@ -1,3 +1,4 @@
+import inventory_entry
 from inventory_entry import InventoryEntry, Ingredient, PantryPalIngredientIDMap
 from typing import List, Dict
 import json
@@ -26,6 +27,17 @@ class InventoryTracker:
 
     def remove_entry(self, id: str):
         self.inventory.pop(id)
+
+    def get_entry(self, id: str):
+        return self.inventory.get(id)
+
+    def have_enough(self, id: int, needed_quantity: float, needed_unit: str):
+        entry = self.get_entry(str(id))
+        if needed_unit != entry.unit:
+            print(needed_unit)
+            print(entry.unit)
+            needed_quantity = inventory_entry.convert(entry.ingredient.name, needed_quantity, needed_unit, entry.unit)
+        return entry.quantity >= needed_quantity
 
     def modify_entry(self, id: str, new_name: str, new_quantity: float, new_unit: str, new_exp_date: datetime.date):
         self.remove_entry(id)

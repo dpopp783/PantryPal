@@ -60,9 +60,9 @@ inv_tracker.add_entry("Rice", 2.0, "cup", datetime.datetime.strptime("2023-12-28
 inv_tracker.add_entry("Flour", 10.0, "cup", datetime.date(2024, 9, 4))
 inv_tracker.add_entry("Sugar", 8.0, "cup", datetime.date(2024, 5, 23))
 inv_tracker.add_entry("Apple", 6.0, "large", datetime.date(2023, 11, 18))
-inv_tracker.add_entry("Vinegar", 10.0, "cup", datetime.date(2024, 9, 4))
-inv_tracker.add_entry("Milk", 8.0, "cup", datetime.date(2024, 5, 23))
-inv_tracker.add_entry("Cheese", 6.0, "large", datetime.date(2023, 11, 18))
+# inv_tracker.add_entry("Vinegar", 10.0, "cup", datetime.date(2024, 9, 4))
+# inv_tracker.add_entry("Milk", 8.0, "cup", datetime.date(2024, 5, 23))
+inv_tracker.add_entry("Cheddar", 6.0, "cup", datetime.date(2023, 11, 18))
 
 # Setup test ShoppingList object
 shop_list = ShoppingList()
@@ -165,7 +165,7 @@ def ingredients():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
     
     # cur.execute('SELECT * FROM inventory_entry')
     # entries = cur.fetchall()
@@ -188,7 +188,7 @@ def ingredients_add():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
 
     if request.method == "POST":
         name = request.form['name']
@@ -207,7 +207,7 @@ def ingredients_modify():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
 
     mod_id = request.form["id"]
     new_name = request.form["name"]
@@ -240,7 +240,7 @@ def recipes():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
     recipe_recommender.get_recommendations(inv_tracker, 2)
     return render_template("recipes.html", recipes = recipe_recommender.recommendations, recipes_JSON = recipe_recommender.jsonify(inv_tracker), response=response)
 
@@ -253,9 +253,24 @@ def recipes_search():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
 
     return jsonify("{}")  # Return a JSON of results
+
+@app.route("/recipes/buy-ingredients", methods=["POST"])
+def recipes_buy_ingredients():
+
+    print("Adding ingredients to list")
+    print(request.get_json())
+
+    recipe = request.get_json()
+    print(type(recipe))
+    ingredients = recipe['missedIngredients']
+
+    for ingredient in ingredients:
+        shop_list.add_item(ingredient["ingredient"]["name"], ingredient["quantity"], ingredient["unit"])
+
+    return redirect("/recipes")
 
 
 @app.route("/shoppinglist", methods=["GET"])
@@ -266,7 +281,7 @@ def shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
     
     return render_template("shoppinglist.html", shoppinglist=shop_list.shopping_list.values(), shoppinglist_JSON=shop_list.jsonify())
 
@@ -279,7 +294,7 @@ def add_shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
 
     if request.method == "POST":
         name = request.form['name']
@@ -297,7 +312,7 @@ def modify_shoppinglist():
         response = "Success: "
     except Exception as e:
         
-        response = "Error: "
+        response = str(e)
 
     mod_id = request.form["id"]
     new_name = request.form["name"]
@@ -314,10 +329,8 @@ def remove_shoppinglist():
         
         response = "Success: "
     except Exception as e:
-        
-        response = "Error: "
+        response = str(e)
 
-    
     return redirect("/shoppinglist")
 
 
