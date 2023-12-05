@@ -216,8 +216,19 @@ def ingredients_modify():
             print(request.form)
             mod_id = request.form["id"]
             new_name = request.form["name"]
-            new_quantity = float(request.form["quantity"])
+            if not new_name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/ingredients")
+            new_quantity = request.form["quantity"]
+            if not new_quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/ingredients")
+            else:
+                quantity = float(new_quantity)
             new_unit = request.form["unit"]
+            if not new_unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/ingredients")
             if len(request.form['expiration_date']):
                 new_exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
             else:
@@ -367,8 +378,20 @@ def add_shoppinglist():
     if session.get("username", None):
         try:
             name = request.form['name']
-            quantity = float(request.form['quantity'])
+            if not name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/shoppinglist")
+            quantity = request.form['quantity']
+            if not quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/shoppinglist")
+            else:
+                quantity = float(quantity)
+
             unit = request.form['unit']
+            if not unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/shoppinglist")
 
             shop = ShoppingList(session["username"])
             shop.add_item(name, quantity, unit)
@@ -391,8 +414,19 @@ def modify_shoppinglist():
         try:  
             mod_id = request.form["id"]
             new_name = request.form["name"]
-            new_quantity = float(request.form["quantity"])
+            if not new_name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/shoppinglist")
+            new_quantity = request.form["quantity"]
+            if not new_quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/shoppinglist")
+            else:
+                quantity = float(new_quantity)
             new_unit = request.form["unit"]
+            if not new_unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/shoppinglist")
 
             shop = ShoppingList(session["username"])
             shop.modify_item(mod_id, new_name, new_quantity, new_unit)
@@ -436,6 +470,9 @@ def purchase_shoppinglist():
             quantity = float(request.form['quantity'])
             unit = request.form['unit']
             exp_date = request.form['expiration_date']
+            if not exp_date:
+                flash("Please enter an expiration date for the ingredient.", "danger")
+                return redirect("/shoppinglist")
 
             inv = InventoryTracker(session["username"])
             shop = ShoppingList(session["username"])
