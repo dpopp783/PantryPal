@@ -142,17 +142,17 @@ def ingredients():
 def ingredients_add():
     if session.get("username", None):
         try:
-            pass
-        except Exception as e:
-            
-            flash(str(e), 'error')
-
-        if request.method == "POST":
             name = request.form['name']
             quantity = float(request.form['quantity'])
             unit = request.form['unit']
             exp_date = datetime.datetime.strptime(request.form['expiration_date'], '%Y-%m-%d').date()
-            inv_tracker.add_entry(name, quantity, unit, exp_date)
+
+            inv = InventoryTracker(session["username"])   
+            inv.add_entry(name, quantity, unit, exp_date)
+        except Exception as e:
+            flash(str(e), 'error')
+
+
         return redirect("/ingredients")
     else:
         flash("Please log in to use PantryPal", "danger")
