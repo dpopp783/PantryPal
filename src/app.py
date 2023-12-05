@@ -378,8 +378,20 @@ def add_shoppinglist():
     if session.get("username", None):
         try:
             name = request.form['name']
-            quantity = float(request.form['quantity'])
+            if not name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/shoppinglist")
+            quantity = request.form['quantity']
+            if not quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/shoppinglist")
+            else:
+                quantity = float(quantity)
+
             unit = request.form['unit']
+            if not unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/shoppinglist")
 
             shop = ShoppingList(session["username"])
             shop.add_item(name, quantity, unit)
