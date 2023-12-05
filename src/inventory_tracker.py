@@ -4,11 +4,22 @@ from typing import List, Dict
 import json
 import datetime
 
+from data_util import *
 
 class InventoryTracker:
 
     def __init__(self, username: str):
         self.inventory: Dict[str, InventoryEntry] = dict()
+
+        data = get_data(username)
+        inventory = data["inventory"]
+        for item in inventory.values():
+            self.inventory[item["ingredient"]["id"]] = InventoryEntry(
+                Ingredient(item["ingredient"]["name"], item["ingredient"]["id"]),
+                item["quantity"],
+                item["unit"],
+                item["expiration_date"]
+            )
     
     def __str__(self):
         return ",".join(map(lambda i: i.ingredient.name, self.inventory.values()))

@@ -1,6 +1,7 @@
 from flask import *
-
+from data_util import *
 import config
+
 from inventory_tracker import InventoryTracker
 from inventory_entry import InventoryEntry, Ingredient, PantryPalIngredientIDMap
 from shopping_list import ShoppingList
@@ -49,35 +50,8 @@ import csv
 app = Flask(__name__)
 app.secret_key = config.api_key # This just has to exist to use sessions
 
-# Setup test InventoryTracker object
 
-# idMap = PantryPalIngredientIDMap()
-# inv_tracker = InventoryTracker()
-# inv_tracker.add_entry("Rice", 2.0, "cup", datetime.datetime.strptime("2023-12-28", "%Y-%m-%d").date())
-# inv_tracker.add_entry("Flour", 10.0, "cup", datetime.date(2024, 9, 4))
-# inv_tracker.add_entry("Sugar", 8.0, "cup", datetime.date(2024, 5, 23))
-# inv_tracker.add_entry("Apple", 6.0, "large", datetime.date(2023, 11, 18))
-# # inv_tracker.add_entry("Vinegar", 10.0, "cup", datetime.date(2024, 9, 4))
-# # inv_tracker.add_entry("Milk", 8.0, "cup", datetime.date(2024, 5, 23))
-# inv_tracker.add_entry("Cheddar", 6.0, "cup", datetime.date(2023, 11, 18))
 
-# # Setup test ShoppingList object
-# shop_list = ShoppingList()
-# shop_list.add_item("Rice", 16, "cup")
-# shop_list.add_item("Cheddar", 24, "oz")
-
-# # setup test RecipeRecommender object
-# recipe_recommender = RecipeRecommender()
-
-# user_data = {
-#     "inventory": inv_tracker.to_dict(),
-#     "shoppinglist": shop_list.to_dict()
-# }
-
-# print(user_data)
-
-# with open("TEST.json", "w") as f:
-#     json.dump(user_data, f, indent=4)
 
 
 @app.route("/", methods=["GET"])
@@ -154,21 +128,11 @@ def dashboard():
 def ingredients():
     if session.get("username", None):
         try:
-            inventory = InventoryTracker(session["username"])
+            inv = InventoryTracker(session["username"])
+            return render_template("ingredients.html", inventory=inv.inventory, inventory_JSON=inv.jsonify())
         except Exception as e:
             flash(str(e), 'error')
-        
-        # cur.execute('SELECT * FROM inventory_entry')
-        # entries = cur.fetchall()
-
-        inventory = []
-        # for id, ing_id, amount, unit, date in entries:
-        #     cur.execute(f'SELECT name FROM ingredient WHERE id={ing_id}')
-        #     ing_name = cur.fetchall()[0][0]
-        #     inventory.append(InventoryEntry(Ingredient(ing_name, ing_id), amount, unit, date))
-
-        # TODO: Add another arg called inventory_JSON, set it equal to the JSON representation of the InventoryTracker
-        return render_template("ingredients.html", inventory=inv_tracker.inventory, inventory_JSON=inv_tracker.jsonify())
+            return render_template("ingredients.html", inventory={}, inventory_JSON={})
     else:
         flash("Please log in to use PantryPal", "danger")
         return redirect("/")
