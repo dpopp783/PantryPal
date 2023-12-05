@@ -1,5 +1,4 @@
 from flask import *
-from flask_login import *
 
 # import config
 from inventory_tracker import InventoryTracker
@@ -48,7 +47,7 @@ import csv
 # cur.execute("INSERT INTO inventory_entry(ingredient_id, amount, unit, expiration_date) VALUES(1009, 2, 'cup','2023-11-1')")
 
 app = Flask(__name__)
-login_manager = LoginManager()
+app.secret_key = "AAAA"
 
 response = ""
 
@@ -73,55 +72,29 @@ shop_list.add_item("Cheddar", 24, "oz")
 recipe_recommender = RecipeRecommender()
 
 
-class User():
-    def __init__(self, username, password):
-        self.verify(username, password)
-        self.username = username
-        self.is_authenticated = True
-        self.is_active = True
-        self.is_anonymous = False
-
-    def get_id(self):
-        return self.username
-
-    def verify(username, password):
-        with open("accounts.json", "r") as f:
-            accounts: dict = json.load(f)
-            if not accounts.get(username):
-                raise Exception(f"Could not find account '{username}'.")
-            elif accounts[username] != password:
-                raise Exception(f"Incorrect password for '{username}'.")
-            else:
-                return True
-
-    def create(username, password):
-        with open("accounts.json", "r") as f:
-            accounts: dict = json.load(f)
-            if accounts.get(username):
-                raise Exception(f"Account '{username}' already exists.")
-
-@login_manager.user_loader
-def load_user(username, password):
-    return User(username, password)
 
 @app.route("/", methods=["GET"])
 def index():
     global response
-    try:
-        pass
-    except Exception as e:
-        pass
+
     return render_template("login.html", response = response)
 
 
 @app.route("/login", methods=["POST"])
 def login():
     global response
-    print(request.form)
     try:
         username = request.form["username"]
         password = request.form["password"]
-        # login_user(User(username, password))
+        
+        with open("accounts.json", "r") as f:
+            accounts: dict = json.load(f)
+            if not accounts.get(username, None):
+                raise Exception(f"Could not find account '{username}'.")
+            elif accounts.get(username) != password:
+                raise Exception(f"Incorrect password for '{username}'.")
+            else:
+                session["username"] = username
 
         return redirect("/dashboard")
     except Exception as e:
@@ -133,9 +106,24 @@ def login():
 def signup():
     global response
     try:
+        username = request.form["username"]
+        password = request.form["password"]
+        with open("accounts.json", "r") as f:
+            accounts: dict = json.load(f)
+            if accounts.get(username, None):
+                raise Exception(f"Account '{username}' already exists.")
+            elif not password:
+                raise Exception(f"Password must be one or more characters.")
+            else:
+                accounts[username] = password
+
+        with open("accounts.json", "w") as f:
+            json.dump(accounts, f, indent=4)
+        
+        session["username"] = username
         return redirect("/dashboard")
     except Exception as e:
-        pass
+        print(e)
         return redirect("/")
 
 
@@ -355,6 +343,4 @@ def purchase_shoppinglist():
     return redirect("/shoppinglist")
 
 
-
-login_manager.init_app(app)
 app.run(debug = True)
