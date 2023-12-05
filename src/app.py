@@ -414,8 +414,19 @@ def modify_shoppinglist():
         try:  
             mod_id = request.form["id"]
             new_name = request.form["name"]
-            new_quantity = float(request.form["quantity"])
+            if not new_name:
+                flash("Please enter the Ingredient Name.", "danger")
+                return redirect("/shoppinglist")
+            new_quantity = request.form["quantity"]
+            if not new_quantity:
+                flash("Please enter a quantity for the ingredient.", "danger")
+                return redirect("/shoppinglist")
+            else:
+                quantity = float(new_quantity)
             new_unit = request.form["unit"]
+            if not new_unit:
+                flash("Please enter the Unit.", "danger")
+                return redirect("/shoppinglist")
 
             shop = ShoppingList(session["username"])
             shop.modify_item(mod_id, new_name, new_quantity, new_unit)
