@@ -1,2 +1,2 @@
 # PantryPal
-A pantry management system design and implemented for CSDS 393 at CWRU
+A pantry management system designed and implemented for CSDS 393 at CWRU
